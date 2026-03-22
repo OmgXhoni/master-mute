@@ -1,0 +1,7 @@
+pystray>=0.19
+pycaw>=20230407
+comtypes>=1.2
+keyboard>=0.13.5
+pynput>=1.8
+Pillow>=10.0
+requests>=2.31

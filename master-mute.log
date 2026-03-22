@@ -1,0 +1,533 @@
+2026-03-22 16:19:19,825 [INFO] MasterMute: MasterMute starting...
+2026-03-22 16:19:19,825 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 16:19:19,830 [INFO] MasterMute: Startup: mic is unmuted
+2026-03-22 16:19:20,396 [INFO] chroma: Chroma SDK session established: http://localhost:62174/chromasdk
+2026-03-22 16:19:20,397 [INFO] MasterMute: Chroma SDK connected
+2026-03-22 16:19:20,453 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 16:19:20,454 [INFO] MasterMute: MasterMute running.
+2026-03-22 16:19:24,089 [INFO] hotkey: Short press detected (145ms)
+2026-03-22 16:19:24,092 [INFO] audio: Mic mute set to True
+2026-03-22 16:19:24,095 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:19:24,097 [INFO] chroma: Keyboard set to solid mute color
+2026-03-22 16:19:24,104 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:19:26,524 [INFO] hotkey: Short press detected (142ms)
+2026-03-22 16:19:26,526 [INFO] audio: Mic mute set to False
+2026-03-22 16:19:26,529 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:19:26,534 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:19:28,916 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:19:28,919 [INFO] audio: Mic mute set to True
+2026-03-22 16:19:28,921 [INFO] audio: Speaker mute set to True
+2026-03-22 16:19:28,924 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:19:28,925 [INFO] chroma: Started pulsing keyboard
+2026-03-22 16:19:28,933 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 16:19:42,469 [INFO] hotkey: Short press detected (216ms)
+2026-03-22 16:19:42,471 [INFO] audio: Mic mute set to False
+2026-03-22 16:19:42,473 [INFO] audio: Speaker mute set to False
+2026-03-22 16:19:42,476 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:19:42,481 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:19:48,104 [INFO] hotkey: Short press detected (178ms)
+2026-03-22 16:19:48,106 [INFO] audio: Mic mute set to True
+2026-03-22 16:19:48,109 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:19:48,111 [INFO] chroma: Keyboard set to solid mute color
+2026-03-22 16:19:48,114 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:19:56,910 [INFO] hotkey: Short press detected (244ms)
+2026-03-22 16:19:56,912 [INFO] audio: Mic mute set to False
+2026-03-22 16:19:56,915 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:19:56,920 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:19:58,873 [INFO] hotkey: Short press detected (169ms)
+2026-03-22 16:19:58,875 [INFO] audio: Mic mute set to True
+2026-03-22 16:19:58,878 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:19:58,879 [INFO] chroma: Keyboard set to solid mute color
+2026-03-22 16:19:58,883 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:31:59,391 [INFO] MasterMute: MasterMute starting...
+2026-03-22 16:31:59,391 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 16:31:59,395 [INFO] MasterMute: Startup: mic is already muted
+2026-03-22 16:31:59,447 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 16:31:59,448 [INFO] MasterMute: MasterMute running.
+2026-03-22 16:33:26,828 [INFO] MasterMute: MasterMute starting...
+2026-03-22 16:33:26,828 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 16:33:26,832 [INFO] MasterMute: Startup: mic is already muted
+2026-03-22 16:33:26,886 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 16:33:26,886 [INFO] MasterMute: MasterMute running.
+2026-03-22 16:33:31,862 [INFO] hotkey: Short press detected (179ms)
+2026-03-22 16:33:31,865 [INFO] audio: Mic mute set to False
+2026-03-22 16:33:31,868 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:33:31,871 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:33:34,093 [INFO] hotkey: Short press detected (157ms)
+2026-03-22 16:33:34,095 [INFO] audio: Mic mute set to True
+2026-03-22 16:33:34,098 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:33:34,101 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:33:35,570 [INFO] hotkey: Short press detected (147ms)
+2026-03-22 16:33:35,572 [INFO] audio: Mic mute set to False
+2026-03-22 16:33:35,575 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:33:35,579 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:33:37,274 [INFO] hotkey: Short press detected (164ms)
+2026-03-22 16:33:37,276 [INFO] audio: Mic mute set to True
+2026-03-22 16:33:37,279 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:33:37,282 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:33:45,126 [INFO] hotkey: Short press detected (154ms)
+2026-03-22 16:33:45,128 [INFO] audio: Mic mute set to False
+2026-03-22 16:33:45,131 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:33:45,136 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:47:31,058 [INFO] MasterMute: MasterMute starting...
+2026-03-22 16:47:31,058 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 16:47:31,063 [INFO] audio: Mic mute set to False
+2026-03-22 16:47:31,065 [INFO] audio: Speaker mute set to False
+2026-03-22 16:47:31,065 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 16:47:31,119 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 16:47:31,119 [INFO] MasterMute: MasterMute running.
+2026-03-22 16:47:46,895 [INFO] hotkey: Short press detected (186ms)
+2026-03-22 16:47:46,898 [INFO] audio: Mic mute set to True
+2026-03-22 16:47:46,900 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:47:46,909 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:48:05,600 [INFO] hotkey: Short press detected (123ms)
+2026-03-22 16:48:05,602 [INFO] audio: Mic mute set to False
+2026-03-22 16:48:05,604 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:48:05,608 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:48:10,083 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:48:10,085 [INFO] audio: Mic mute set to True
+2026-03-22 16:48:10,087 [INFO] audio: Speaker mute set to True
+2026-03-22 16:48:10,089 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:48:10,097 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 16:48:15,475 [INFO] hotkey: Short press detected (142ms)
+2026-03-22 16:48:15,477 [INFO] audio: Mic mute set to False
+2026-03-22 16:48:15,479 [INFO] audio: Speaker mute set to False
+2026-03-22 16:48:15,481 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:48:15,484 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:48:20,699 [INFO] hotkey: Short press detected (129ms)
+2026-03-22 16:48:20,701 [INFO] audio: Mic mute set to True
+2026-03-22 16:48:20,703 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:48:20,707 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:48:34,555 [INFO] hotkey: Short press detected (119ms)
+2026-03-22 16:48:34,557 [INFO] audio: Mic mute set to False
+2026-03-22 16:48:34,559 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:48:34,565 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:52:09,997 [INFO] hotkey: Short press detected (162ms)
+2026-03-22 16:52:10,000 [INFO] audio: Mic mute set to True
+2026-03-22 16:52:10,002 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:52:10,005 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:52:18,292 [INFO] hotkey: Short press detected (125ms)
+2026-03-22 16:52:18,294 [INFO] audio: Mic mute set to False
+2026-03-22 16:52:18,297 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:52:18,300 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:53:40,339 [INFO] hotkey: Short press detected (115ms)
+2026-03-22 16:53:40,342 [INFO] audio: Mic mute set to True
+2026-03-22 16:53:40,345 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:53:40,349 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:54:10,619 [INFO] hotkey: Short press detected (137ms)
+2026-03-22 16:54:10,622 [INFO] audio: Mic mute set to False
+2026-03-22 16:54:10,625 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:54:10,629 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:54:17,342 [INFO] hotkey: Short press detected (108ms)
+2026-03-22 16:54:17,344 [INFO] audio: Mic mute set to True
+2026-03-22 16:54:17,348 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:54:17,353 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:54:19,303 [INFO] hotkey: Short press detected (128ms)
+2026-03-22 16:54:19,305 [INFO] audio: Mic mute set to False
+2026-03-22 16:54:19,307 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:54:19,312 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:54:20,884 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:54:20,886 [INFO] audio: Mic mute set to True
+2026-03-22 16:54:20,888 [INFO] audio: Speaker mute set to True
+2026-03-22 16:54:20,891 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:54:20,899 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 16:54:26,246 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:54:29,879 [INFO] hotkey: Short press detected (128ms)
+2026-03-22 16:54:29,881 [INFO] audio: Mic mute set to False
+2026-03-22 16:54:29,883 [INFO] audio: Speaker mute set to False
+2026-03-22 16:54:29,886 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:54:29,891 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:54:31,990 [INFO] hotkey: Short press detected (120ms)
+2026-03-22 16:54:31,993 [INFO] audio: Mic mute set to True
+2026-03-22 16:54:31,995 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:54:31,998 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:54:33,882 [INFO] hotkey: Short press detected (147ms)
+2026-03-22 16:54:33,885 [INFO] audio: Mic mute set to False
+2026-03-22 16:54:33,887 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:54:33,891 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:54:35,551 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:54:35,553 [INFO] audio: Mic mute set to True
+2026-03-22 16:54:35,555 [INFO] audio: Speaker mute set to True
+2026-03-22 16:54:35,558 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:54:35,562 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 16:54:42,390 [INFO] hotkey: Short press detected (147ms)
+2026-03-22 16:54:42,392 [INFO] audio: Mic mute set to False
+2026-03-22 16:54:42,394 [INFO] audio: Speaker mute set to False
+2026-03-22 16:54:42,397 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:54:42,402 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:56:26,242 [INFO] hotkey: Short press detected (101ms)
+2026-03-22 16:56:26,245 [INFO] audio: Mic mute set to True
+2026-03-22 16:56:26,247 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:56:26,256 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:56:28,117 [INFO] hotkey: Short press detected (98ms)
+2026-03-22 16:56:28,120 [INFO] audio: Mic mute set to False
+2026-03-22 16:56:28,121 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:56:28,131 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:56:34,810 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:56:34,812 [INFO] audio: Mic mute set to True
+2026-03-22 16:56:34,814 [INFO] audio: Speaker mute set to True
+2026-03-22 16:56:34,816 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:56:34,826 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 16:56:37,322 [INFO] hotkey: Short press detected (105ms)
+2026-03-22 16:56:37,324 [INFO] audio: Mic mute set to False
+2026-03-22 16:56:37,326 [INFO] audio: Speaker mute set to False
+2026-03-22 16:56:37,329 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:56:37,332 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:57:02,078 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:57:02,080 [INFO] audio: Mic mute set to True
+2026-03-22 16:57:02,082 [INFO] audio: Speaker mute set to True
+2026-03-22 16:57:02,085 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:57:02,090 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 16:57:32,174 [INFO] hotkey: Short press detected (158ms)
+2026-03-22 16:57:32,176 [INFO] audio: Mic mute set to False
+2026-03-22 16:57:32,178 [INFO] audio: Speaker mute set to False
+2026-03-22 16:57:32,180 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:57:32,184 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:58:03,540 [INFO] MasterMute: MasterMute starting...
+2026-03-22 16:58:03,540 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 16:58:03,544 [INFO] audio: Mic mute set to False
+2026-03-22 16:58:03,546 [INFO] audio: Speaker mute set to False
+2026-03-22 16:58:03,546 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 16:58:03,600 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 16:58:03,601 [INFO] MasterMute: MasterMute running.
+2026-03-22 16:58:15,923 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:58:15,925 [INFO] audio: Mic mute set to True
+2026-03-22 16:58:15,927 [INFO] audio: Speaker mute set to True
+2026-03-22 16:58:15,980 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:58:15,983 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 16:58:19,246 [INFO] hotkey: Short press detected (172ms)
+2026-03-22 16:58:19,248 [INFO] audio: Mic mute set to False
+2026-03-22 16:58:19,250 [INFO] audio: Speaker mute set to False
+2026-03-22 16:58:19,252 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:58:19,257 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:58:20,341 [INFO] hotkey: Short press detected (129ms)
+2026-03-22 16:58:20,343 [INFO] audio: Mic mute set to True
+2026-03-22 16:58:20,345 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:58:20,350 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:58:20,988 [INFO] hotkey: Short press detected (114ms)
+2026-03-22 16:58:20,990 [INFO] audio: Mic mute set to False
+2026-03-22 16:58:20,992 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:58:20,996 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 16:59:14,860 [INFO] MasterMute: MasterMute starting...
+2026-03-22 16:59:14,860 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 16:59:14,864 [INFO] audio: Mic mute set to False
+2026-03-22 16:59:14,866 [INFO] audio: Speaker mute set to False
+2026-03-22 16:59:14,866 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 16:59:14,920 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 16:59:14,920 [INFO] MasterMute: MasterMute running.
+2026-03-22 16:59:31,927 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 16:59:31,930 [INFO] audio: Mic mute set to True
+2026-03-22 16:59:31,931 [INFO] audio: Speaker mute set to True
+2026-03-22 16:59:31,935 [INFO] MasterMute: State -> DEAFENED (Discord hotkey deferred until key release)
+2026-03-22 16:59:32,899 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:59:32,900 [INFO] MasterMute: Deferred Discord hotkey sent on key release
+2026-03-22 16:59:35,544 [INFO] hotkey: Short press detected (183ms)
+2026-03-22 16:59:35,547 [INFO] audio: Mic mute set to False
+2026-03-22 16:59:35,549 [INFO] audio: Speaker mute set to False
+2026-03-22 16:59:35,551 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f10
+2026-03-22 16:59:35,555 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 16:59:36,654 [INFO] hotkey: Short press detected (163ms)
+2026-03-22 16:59:36,656 [INFO] audio: Mic mute set to True
+2026-03-22 16:59:36,658 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:59:36,662 [INFO] MasterMute: State -> MUTED
+2026-03-22 16:59:37,424 [INFO] hotkey: Short press detected (137ms)
+2026-03-22 16:59:37,426 [INFO] audio: Mic mute set to False
+2026-03-22 16:59:37,428 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 16:59:37,431 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:01:20,503 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:01:20,503 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:01:20,508 [INFO] audio: Mic mute set to False
+2026-03-22 17:01:20,510 [INFO] audio: Speaker mute set to False
+2026-03-22 17:01:20,510 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:01:20,562 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:01:20,562 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:01:29,067 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:01:29,069 [INFO] audio: Mic mute set to True
+2026-03-22 17:01:29,071 [INFO] audio: Speaker mute set to True
+2026-03-22 17:01:29,074 [INFO] MasterMute: State -> DEAFENED (Discord hotkey deferred until key release)
+2026-03-22 17:01:29,803 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:01:29,803 [INFO] MasterMute: Deferred Discord hotkey sent on key release
+2026-03-22 17:01:36,530 [INFO] hotkey: Short press detected (128ms)
+2026-03-22 17:01:36,533 [INFO] audio: Mic mute set to False
+2026-03-22 17:01:36,535 [INFO] audio: Speaker mute set to False
+2026-03-22 17:01:36,537 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:01:36,542 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:01:38,133 [INFO] hotkey: Short press detected (130ms)
+2026-03-22 17:01:38,135 [INFO] audio: Mic mute set to True
+2026-03-22 17:01:38,137 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:38,140 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:01:40,075 [INFO] hotkey: Short press detected (127ms)
+2026-03-22 17:01:40,078 [INFO] audio: Mic mute set to False
+2026-03-22 17:01:40,080 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:40,085 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:01:42,085 [INFO] hotkey: Short press detected (125ms)
+2026-03-22 17:01:42,088 [INFO] audio: Mic mute set to True
+2026-03-22 17:01:42,090 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:42,094 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:01:43,182 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:01:46,539 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:01:47,866 [INFO] hotkey: Short press detected (121ms)
+2026-03-22 17:01:47,868 [INFO] audio: Mic mute set to False
+2026-03-22 17:01:47,870 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:47,874 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:01:48,495 [INFO] hotkey: Short press detected (155ms)
+2026-03-22 17:01:48,497 [INFO] audio: Mic mute set to True
+2026-03-22 17:01:48,499 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:48,504 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:01:49,115 [INFO] hotkey: Short press detected (127ms)
+2026-03-22 17:01:49,117 [INFO] audio: Mic mute set to False
+2026-03-22 17:01:49,119 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:49,122 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:01:49,690 [INFO] hotkey: Short press detected (107ms)
+2026-03-22 17:01:49,692 [INFO] audio: Mic mute set to True
+2026-03-22 17:01:49,694 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:49,699 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:01:52,338 [INFO] hotkey: Short press detected (173ms)
+2026-03-22 17:01:52,340 [INFO] audio: Mic mute set to False
+2026-03-22 17:01:52,342 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:52,346 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:01:53,014 [INFO] hotkey: Short press detected (126ms)
+2026-03-22 17:01:53,016 [INFO] audio: Mic mute set to True
+2026-03-22 17:01:53,018 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:53,023 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:01:53,799 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:01:55,574 [INFO] hotkey: Short press detected (168ms)
+2026-03-22 17:01:55,576 [INFO] audio: Mic mute set to False
+2026-03-22 17:01:55,578 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:55,585 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:01:56,312 [INFO] hotkey: Short press detected (144ms)
+2026-03-22 17:01:56,314 [INFO] audio: Mic mute set to True
+2026-03-22 17:01:56,316 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:01:56,319 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:03:57,729 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:03:57,729 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:03:57,734 [INFO] audio: Mic mute set to False
+2026-03-22 17:03:57,736 [INFO] audio: Speaker mute set to False
+2026-03-22 17:03:57,736 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:03:57,788 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:03:57,788 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:04:30,481 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:04:30,484 [INFO] audio: Mic mute set to True
+2026-03-22 17:04:30,485 [INFO] audio: Speaker mute set to True
+2026-03-22 17:04:30,488 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:04:30,491 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:04:32,783 [INFO] hotkey: Short press detected (156ms)
+2026-03-22 17:04:32,785 [INFO] audio: Mic mute set to False
+2026-03-22 17:04:32,787 [INFO] audio: Speaker mute set to False
+2026-03-22 17:04:32,790 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:04:32,794 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:04:34,177 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:04:34,179 [INFO] audio: Mic mute set to True
+2026-03-22 17:04:34,180 [INFO] audio: Speaker mute set to True
+2026-03-22 17:04:34,183 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:04:34,188 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:04:36,495 [INFO] hotkey: Short press detected (121ms)
+2026-03-22 17:04:36,497 [INFO] audio: Mic mute set to False
+2026-03-22 17:04:36,499 [INFO] audio: Speaker mute set to False
+2026-03-22 17:04:36,502 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:04:36,505 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:04:37,822 [INFO] hotkey: Short press detected (109ms)
+2026-03-22 17:04:37,824 [INFO] audio: Mic mute set to True
+2026-03-22 17:04:37,826 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:04:37,831 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:04:44,233 [INFO] hotkey: Short press detected (159ms)
+2026-03-22 17:04:44,235 [INFO] audio: Mic mute set to False
+2026-03-22 17:04:44,238 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:04:44,242 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:04:46,762 [INFO] hotkey: Short press detected (129ms)
+2026-03-22 17:04:46,764 [INFO] audio: Mic mute set to True
+2026-03-22 17:04:46,766 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:04:46,770 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:04:51,381 [INFO] hotkey: Short press detected (127ms)
+2026-03-22 17:04:51,383 [INFO] audio: Mic mute set to False
+2026-03-22 17:04:51,385 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:04:51,389 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:04:58,068 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:04:58,070 [INFO] audio: Mic mute set to True
+2026-03-22 17:04:58,072 [INFO] audio: Speaker mute set to True
+2026-03-22 17:04:58,074 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:04:58,079 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:05:00,647 [INFO] hotkey: Short press detected (124ms)
+2026-03-22 17:05:00,649 [INFO] audio: Mic mute set to False
+2026-03-22 17:05:00,651 [INFO] audio: Speaker mute set to False
+2026-03-22 17:05:00,654 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:05:00,657 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:05:01,722 [INFO] hotkey: Short press detected (114ms)
+2026-03-22 17:05:01,724 [INFO] audio: Mic mute set to True
+2026-03-22 17:05:01,726 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:05:01,730 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:05:02,343 [INFO] hotkey: Short press detected (123ms)
+2026-03-22 17:05:02,345 [INFO] audio: Mic mute set to False
+2026-03-22 17:05:02,347 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:05:02,352 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:05:03,292 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:05:03,294 [INFO] audio: Mic mute set to True
+2026-03-22 17:05:03,296 [INFO] audio: Speaker mute set to True
+2026-03-22 17:05:03,299 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:05:03,303 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:05:04,274 [INFO] hotkey: Short press detected (147ms)
+2026-03-22 17:05:04,276 [INFO] audio: Mic mute set to False
+2026-03-22 17:05:04,278 [INFO] audio: Speaker mute set to False
+2026-03-22 17:05:04,281 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:05:04,285 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:05:07,693 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:05:07,695 [INFO] audio: Mic mute set to True
+2026-03-22 17:05:07,697 [INFO] audio: Speaker mute set to True
+2026-03-22 17:05:07,700 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:05:07,703 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:05:08,833 [INFO] hotkey: Short press detected (162ms)
+2026-03-22 17:05:08,835 [INFO] audio: Mic mute set to False
+2026-03-22 17:05:08,837 [INFO] audio: Speaker mute set to False
+2026-03-22 17:05:08,840 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:05:08,843 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:05:12,138 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:05:12,140 [INFO] audio: Mic mute set to True
+2026-03-22 17:05:12,142 [INFO] audio: Speaker mute set to True
+2026-03-22 17:05:12,145 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:05:12,148 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:05:15,255 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:05:18,434 [INFO] hotkey: Short press detected (157ms)
+2026-03-22 17:05:18,436 [INFO] audio: Mic mute set to False
+2026-03-22 17:05:18,438 [INFO] audio: Speaker mute set to False
+2026-03-22 17:05:18,441 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:05:18,446 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:05:19,738 [INFO] hotkey: Short press detected (149ms)
+2026-03-22 17:05:19,740 [INFO] audio: Mic mute set to True
+2026-03-22 17:05:19,742 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:05:19,746 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:05:20,717 [INFO] hotkey: Short press detected (144ms)
+2026-03-22 17:05:20,719 [INFO] audio: Mic mute set to False
+2026-03-22 17:05:20,721 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:05:20,725 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:07:03,418 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:07:03,418 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:07:03,423 [INFO] audio: Mic mute set to False
+2026-03-22 17:07:03,425 [INFO] audio: Speaker mute set to False
+2026-03-22 17:07:03,425 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:07:03,478 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:07:03,478 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:07:11,295 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:07:11,297 [INFO] audio: Mic mute set to True
+2026-03-22 17:07:11,299 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:11,602 [INFO] audio: Speaker mute set to True
+2026-03-22 17:07:11,607 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:07:14,842 [INFO] hotkey: Short press detected (165ms)
+2026-03-22 17:07:14,844 [INFO] audio: Mic mute set to False
+2026-03-22 17:07:14,846 [INFO] audio: Speaker mute set to False
+2026-03-22 17:07:14,848 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:14,852 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:07:16,286 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:07:16,289 [INFO] audio: Mic mute set to True
+2026-03-22 17:07:16,291 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:16,593 [INFO] audio: Speaker mute set to True
+2026-03-22 17:07:16,597 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:07:17,731 [INFO] hotkey: Short press detected (128ms)
+2026-03-22 17:07:17,733 [INFO] audio: Mic mute set to False
+2026-03-22 17:07:17,735 [INFO] audio: Speaker mute set to False
+2026-03-22 17:07:17,738 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:17,742 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:07:32,061 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:07:32,061 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:07:32,065 [INFO] audio: Mic mute set to False
+2026-03-22 17:07:32,067 [INFO] audio: Speaker mute set to False
+2026-03-22 17:07:32,068 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:07:32,121 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:07:32,122 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:07:38,038 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:07:38,040 [INFO] audio: Mic mute set to True
+2026-03-22 17:07:38,042 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:38,394 [INFO] audio: Speaker mute set to True
+2026-03-22 17:07:38,398 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:07:40,019 [INFO] hotkey: Short press detected (173ms)
+2026-03-22 17:07:40,021 [INFO] audio: Mic mute set to False
+2026-03-22 17:07:40,023 [INFO] audio: Speaker mute set to False
+2026-03-22 17:07:40,025 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:40,030 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:07:41,258 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:07:41,261 [INFO] audio: Mic mute set to True
+2026-03-22 17:07:41,263 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:41,615 [INFO] audio: Speaker mute set to True
+2026-03-22 17:07:41,620 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:07:43,187 [INFO] hotkey: Short press detected (209ms)
+2026-03-22 17:07:43,189 [INFO] audio: Mic mute set to False
+2026-03-22 17:07:43,190 [INFO] audio: Speaker mute set to False
+2026-03-22 17:07:43,193 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:07:43,198 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:07:53,424 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:07:53,424 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:07:53,428 [INFO] audio: Mic mute set to False
+2026-03-22 17:07:53,430 [INFO] audio: Speaker mute set to False
+2026-03-22 17:07:53,430 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:07:53,484 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:07:53,484 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:08:01,999 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:08:02,002 [INFO] audio: Mic mute set to True
+2026-03-22 17:08:02,004 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:02,381 [INFO] audio: Speaker mute set to True
+2026-03-22 17:08:02,386 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:08:03,599 [INFO] hotkey: Short press detected (188ms)
+2026-03-22 17:08:03,601 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:03,603 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:03,605 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:03,610 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:08:14,470 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:08:14,470 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:08:14,474 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:14,476 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:14,476 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:08:14,529 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:08:14,529 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:08:17,297 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:08:17,300 [INFO] audio: Mic mute set to True
+2026-03-22 17:08:17,302 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:17,705 [INFO] audio: Speaker mute set to True
+2026-03-22 17:08:17,708 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:08:19,567 [INFO] hotkey: Short press detected (148ms)
+2026-03-22 17:08:19,569 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:19,571 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:19,573 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:19,578 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:08:20,797 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:08:20,799 [INFO] audio: Mic mute set to True
+2026-03-22 17:08:20,801 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:21,204 [INFO] audio: Speaker mute set to True
+2026-03-22 17:08:21,207 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:08:22,393 [INFO] hotkey: Short press detected (191ms)
+2026-03-22 17:08:22,395 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:22,397 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:22,399 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:22,404 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:08:33,824 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:08:33,824 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:08:33,829 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:33,831 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:33,831 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:08:33,881 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:08:33,881 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:08:38,087 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:08:38,089 [INFO] audio: Mic mute set to True
+2026-03-22 17:08:38,091 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:38,544 [INFO] audio: Speaker mute set to True
+2026-03-22 17:08:38,549 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:08:39,664 [INFO] hotkey: Short press detected (173ms)
+2026-03-22 17:08:39,666 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:39,668 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:39,670 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:39,673 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:08:50,243 [INFO] MasterMute: MasterMute starting...
+2026-03-22 17:08:50,244 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 17:08:50,248 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:50,250 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:50,250 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 17:08:50,300 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 17:08:50,300 [INFO] MasterMute: MasterMute running.
+2026-03-22 17:08:55,522 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:08:55,524 [INFO] audio: Mic mute set to True
+2026-03-22 17:08:55,526 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:56,028 [INFO] audio: Speaker mute set to True
+2026-03-22 17:08:56,032 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:08:57,242 [INFO] hotkey: Short press detected (150ms)
+2026-03-22 17:08:57,244 [INFO] audio: Mic mute set to False
+2026-03-22 17:08:57,246 [INFO] audio: Speaker mute set to False
+2026-03-22 17:08:57,249 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:08:57,253 [INFO] MasterMute: State -> UNMUTED (from deafened)

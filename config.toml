@@ -1,0 +1,18 @@
+[hotkeys]
+listen = "ctrl+shift+alt+f8"
+discord_mute = "ctrl+shift+alt+f9"
+discord_deafen = "ctrl+shift+alt+f7"
+
+[timing]
+long_press_ms = 300
+deafen_audio_delay_ms = 500
+
+[chroma]
+enabled = false
+mute_color = "#FF0000"
+deafen_color = "#FF0000"
+pulse_interval_ms = 500
+
+[logging]
+level = "INFO"
+file = "master-mute.log"
