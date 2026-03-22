@@ -27,9 +27,11 @@ def hex_to_bgr(hex_color: str) -> int:
 class ChromaSession:
     """Manages a Chroma SDK session for per-key keyboard effects."""
 
-    def __init__(self, mute_color_hex: str, deafen_color_hex: str,
+    def __init__(self, unmute_color_hex: str, mute_color_hex: str,
+                 deafen_color_hex: str,
                  mute_button_row: int = 0, mute_button_col: int = 21,
                  pulse_interval_ms: int = 500):
+        self.unmute_color_bgr = hex_to_bgr(unmute_color_hex)
         self.mute_color_bgr = hex_to_bgr(mute_color_hex)
         self.deafen_color_bgr = hex_to_bgr(deafen_color_hex)
         self.mute_button_row = mute_button_row
@@ -103,10 +105,8 @@ class ChromaSession:
             return False
 
     def _build_mute_grid(self) -> list:
-        """All keys off (let Synapse handle them), mute button red."""
-        grid = [[0] * GRID_COLS for _ in range(GRID_ROWS)]
-        grid[self.mute_button_row][self.mute_button_col] = self.mute_color_bgr
-        return grid
+        """All keys red."""
+        return [[self.mute_color_bgr] * GRID_COLS for _ in range(GRID_ROWS)]
 
     def _build_deafen_grid_on(self) -> list:
         """All keys black, mute button red."""
@@ -170,8 +170,20 @@ class ChromaSession:
             on = not on
             self._effect_stop.wait(self.pulse_interval)
 
+    def clear(self) -> None:
+        """Delete session so Synapse regains keyboard at full brightness,
+        then reconnect after a delay (connecting doesn't take over)."""
+        self._stop_effect()
+        self.release()
+        def _delayed_reconnect():
+            time.sleep(2)  # let Synapse fully reclaim at 100% brightness
+            self.connect()
+            log.debug("Background reconnect complete")
+        threading.Thread(target=_delayed_reconnect, daemon=True).start()
+        log.info("Session released — Synapse has full control")
+
     def release(self) -> None:
-        """Release keyboard back to Synapse profile by killing the session."""
+        """Full teardown: stop effects, kill heartbeat, delete session."""
         self._stop_effect()
         self._heartbeat_stop.set()
         if self._heartbeat_thread:
@@ -180,7 +192,7 @@ class ChromaSession:
         if self.connected and self.session_uri:
             try:
                 requests.delete(self.session_uri, timeout=5)
-                log.debug("Chroma session deleted — keyboard released to Synapse")
+                log.debug("Chroma session deleted")
             except Exception as e:
                 log.warning("Failed to delete Chroma session: %s", e)
         self.connected = False

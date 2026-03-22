@@ -139,10 +139,10 @@ class MasterMuteApp:
     # --- LED ---
 
     def _update_led(self):
-        if self.chroma_session is None or not self.chroma_session.connected:
+        if self.chroma_session is None:
             return
         if self.state == State.UNMUTED:
-            self.chroma_session.release()
+            self.chroma_session.clear()
         elif self.state == State.MUTED:
             self.chroma_session.set_solid()
         elif self.state == State.DEAFENED:
@@ -214,6 +214,7 @@ class MasterMuteApp:
         chroma_cfg = self.config.get("chroma", {})
         if chroma_cfg.get("enabled", False):
             self.chroma_session = chroma.ChromaSession(
+                unmute_color_hex=chroma_cfg.get("unmute_color", "#FFFFFF"),
                 mute_color_hex=chroma_cfg.get("mute_color", "#FF0000"),
                 deafen_color_hex=chroma_cfg.get("deafen_color", "#FF0000"),
                 mute_button_row=chroma_cfg.get("mute_button_row", 0),
@@ -221,8 +222,7 @@ class MasterMuteApp:
                 pulse_interval_ms=chroma_cfg.get("pulse_interval_ms", 500),
             )
             if self.chroma_session.connect():
-                log.info("Chroma SDK connected")
-                self._update_led()
+                log.info("Chroma SDK connected (Synapse still in control)")
             else:
                 log.warning("Chroma SDK not available — LED control disabled")
                 self.chroma_session = None
