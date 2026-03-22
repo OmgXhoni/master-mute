@@ -149,26 +149,18 @@ class ChromaSession:
         log.info("Keyboard set to solid mute color (all red)")
 
     def set_deafen(self) -> None:
-        """Blackout keyboard with mute button flashing red."""
+        """Blackout keyboard with mute button solid red."""
         self._stop_effect()
         if not self._ensure_connected():
             return
+        grid = self._build_deafen_grid_on()
         self._effect_stop.clear()
         self._effect_thread = threading.Thread(
-            target=self._deafen_flash_loop, daemon=True
+            target=self._effect_loop, args=(grid,), daemon=True
         )
         self._effect_thread.start()
-        log.info("Keyboard set to deafen (blackout + mute button flashing)")
-
-    def _deafen_flash_loop(self):
-        """Flash mute button red on/off against a blacked-out keyboard."""
-        grid_on = self._build_deafen_grid_on()
-        grid_off = self._build_deafen_grid_off()
-        on = True
-        while not self._effect_stop.is_set():
-            self._send_grid(grid_on if on else grid_off)
+        log.info("Keyboard set to deafen (blackout + mute button red)")
             on = not on
-            self._effect_stop.wait(self.pulse_interval)
 
     def clear(self) -> None:
         """Delete session so Synapse regains keyboard at full brightness,
