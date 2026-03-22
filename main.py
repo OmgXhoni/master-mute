@@ -146,7 +146,7 @@ class MasterMuteApp:
         elif self.state == State.MUTED:
             self.chroma_session.set_solid()
         elif self.state == State.DEAFENED:
-            self.chroma_session.set_pulsing()
+            self.chroma_session.set_deafen()
 
     # --- Tray ---
 
@@ -214,8 +214,10 @@ class MasterMuteApp:
         chroma_cfg = self.config.get("chroma", {})
         if chroma_cfg.get("enabled", False):
             self.chroma_session = chroma.ChromaSession(
-                mute_color_hex=chroma_cfg.get("mute_color", "#AD0014"),
-                deafen_color_hex=chroma_cfg.get("deafen_color", "#AD0014"),
+                mute_color_hex=chroma_cfg.get("mute_color", "#FF0000"),
+                deafen_color_hex=chroma_cfg.get("deafen_color", "#FF0000"),
+                mute_button_row=chroma_cfg.get("mute_button_row", 0),
+                mute_button_col=chroma_cfg.get("mute_button_col", 21),
                 pulse_interval_ms=chroma_cfg.get("pulse_interval_ms", 500),
             )
             if self.chroma_session.connect():

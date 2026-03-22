@@ -8,9 +8,12 @@ long_press_ms = 300
 deafen_audio_delay_ms = 500
 
 [chroma]
-enabled = false
+enabled = true
 mute_color = "#FF0000"
 deafen_color = "#FF0000"
+
+mute_button_row = 0
+mute_button_col = 21
 pulse_interval_ms = 500
 
 [logging]

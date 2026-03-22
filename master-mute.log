@@ -531,3 +531,31 @@
 2026-03-22 17:08:57,246 [INFO] audio: Speaker mute set to False
 2026-03-22 17:08:57,249 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
 2026-03-22 17:08:57,253 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:09:30,780 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:09:30,783 [INFO] audio: Mic mute set to True
+2026-03-22 17:09:30,785 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:09:31,288 [INFO] audio: Speaker mute set to True
+2026-03-22 17:09:31,293 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:09:33,290 [INFO] hotkey: Short press detected (162ms)
+2026-03-22 17:09:33,292 [INFO] audio: Mic mute set to False
+2026-03-22 17:09:33,294 [INFO] audio: Speaker mute set to False
+2026-03-22 17:09:33,297 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:09:33,301 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 17:09:40,309 [INFO] hotkey: Short press detected (93ms)
+2026-03-22 17:09:40,311 [INFO] audio: Mic mute set to True
+2026-03-22 17:09:40,313 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:09:40,318 [INFO] MasterMute: State -> MUTED
+2026-03-22 17:09:42,189 [INFO] hotkey: Short press detected (129ms)
+2026-03-22 17:09:42,191 [INFO] audio: Mic mute set to False
+2026-03-22 17:09:42,193 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 17:09:42,198 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 17:09:43,572 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 17:09:43,575 [INFO] audio: Mic mute set to True
+2026-03-22 17:09:43,577 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:09:44,079 [INFO] audio: Speaker mute set to True
+2026-03-22 17:09:44,085 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 17:09:46,060 [INFO] hotkey: Short press detected (144ms)
+2026-03-22 17:09:46,062 [INFO] audio: Mic mute set to False
+2026-03-22 17:09:46,064 [INFO] audio: Speaker mute set to False
+2026-03-22 17:09:46,067 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 17:09:46,070 [INFO] MasterMute: State -> UNMUTED (from deafened)

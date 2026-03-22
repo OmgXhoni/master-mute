@@ -1,4 +1,4 @@
-"""Razer Chroma SDK REST API wrapper — CHROMA_STATIC for mute/deafen states."""
+"""Razer Chroma SDK REST API wrapper — per-key CHROMA_CUSTOM for mute/deafen states."""
 
 import logging
 import threading
@@ -10,6 +10,9 @@ log = logging.getLogger(__name__)
 
 CHROMA_BASE = "http://localhost:54235/razer/chromasdk"
 HEARTBEAT_INTERVAL = 10  # seconds
+GRID_ROWS = 6
+GRID_COLS = 22
+EFFECT_REFRESH_INTERVAL = 0.2  # seconds between re-sends to hold effect
 
 
 def hex_to_bgr(hex_color: str) -> int:
@@ -22,19 +25,22 @@ def hex_to_bgr(hex_color: str) -> int:
 
 
 class ChromaSession:
-    """Manages a Chroma SDK session for whole-keyboard effects."""
+    """Manages a Chroma SDK session for per-key keyboard effects."""
 
     def __init__(self, mute_color_hex: str, deafen_color_hex: str,
+                 mute_button_row: int = 0, mute_button_col: int = 21,
                  pulse_interval_ms: int = 500):
         self.mute_color_bgr = hex_to_bgr(mute_color_hex)
         self.deafen_color_bgr = hex_to_bgr(deafen_color_hex)
+        self.mute_button_row = mute_button_row
+        self.mute_button_col = mute_button_col
         self.pulse_interval = pulse_interval_ms / 1000.0
         self.session_uri = None
         self.connected = False
         self._heartbeat_thread = None
         self._heartbeat_stop = threading.Event()
-        self._pulse_thread = None
-        self._pulse_stop = threading.Event()
+        self._effect_thread = None
+        self._effect_stop = threading.Event()
 
     def connect(self) -> bool:
         """Initialize a Chroma SDK session."""
@@ -54,7 +60,6 @@ class ChromaSession:
                 log.warning("Chroma SDK returned no session URI: %s", data)
                 return False
             self.connected = True
-            # Small delay to let session stabilize
             time.sleep(0.5)
             self._start_heartbeat()
             log.info("Chroma SDK session established: %s", self.session_uri)
@@ -82,66 +87,92 @@ class ChromaSession:
             except Exception as e:
                 log.warning("Heartbeat failed: %s", e)
 
-    def _send_static(self, color_bgr: int) -> bool:
-        """Send a CHROMA_STATIC effect to the keyboard."""
+    def _send_grid(self, grid: list) -> bool:
+        """Send a CHROMA_CUSTOM effect (6x22 grid) to the keyboard."""
         if not self.connected or not self.session_uri:
             return False
         try:
             resp = requests.put(
                 f"{self.session_uri}/keyboard",
-                json={"effect": "CHROMA_STATIC", "param": {"color": color_bgr}},
+                json={"effect": "CHROMA_CUSTOM", "param": grid},
                 timeout=5,
             )
             return resp.status_code == 200
         except Exception as e:
-            log.warning("Failed to send static effect: %s", e)
+            log.warning("Failed to send grid effect: %s", e)
             return False
 
+    def _build_mute_grid(self) -> list:
+        """All keys off (let Synapse handle them), mute button red."""
+        grid = [[0] * GRID_COLS for _ in range(GRID_ROWS)]
+        grid[self.mute_button_row][self.mute_button_col] = self.mute_color_bgr
+        return grid
+
+    def _build_deafen_grid_on(self) -> list:
+        """All keys black, mute button red."""
+        grid = [[0] * GRID_COLS for _ in range(GRID_ROWS)]
+        grid[self.mute_button_row][self.mute_button_col] = self.deafen_color_bgr
+        return grid
+
+    def _build_deafen_grid_off(self) -> list:
+        """All keys black, mute button also black."""
+        return [[0] * GRID_COLS for _ in range(GRID_ROWS)]
+
     def _ensure_connected(self) -> bool:
-        """Reconnect if session was released."""
         if not self.connected:
             return self.connect()
         return True
 
+    def _stop_effect(self):
+        if self._effect_thread and self._effect_thread.is_alive():
+            self._effect_stop.set()
+            self._effect_thread.join(timeout=2)
+            self._effect_thread = None
+
+    def _effect_loop(self, grid: list):
+        """Repeatedly send a grid to hold the effect against Synapse."""
+        while not self._effect_stop.is_set():
+            self._send_grid(grid)
+            self._effect_stop.wait(EFFECT_REFRESH_INTERVAL)
+
     def set_solid(self) -> None:
         """Set the entire keyboard to solid mute color."""
-        self._stop_pulse()
+        self._stop_effect()
         if not self._ensure_connected():
             return
-        self._send_static(self.mute_color_bgr)
-        log.info("Keyboard set to solid mute color")
-
-    def set_pulsing(self) -> None:
-        """Start pulsing the entire keyboard with deafen color."""
-        self._stop_pulse()
-        if not self._ensure_connected():
-            return
-        self._pulse_stop.clear()
-        self._pulse_thread = threading.Thread(
-            target=self._pulse_loop, daemon=True
+        grid = self._build_mute_grid()
+        self._effect_stop.clear()
+        self._effect_thread = threading.Thread(
+            target=self._effect_loop, args=(grid,), daemon=True
         )
-        self._pulse_thread.start()
-        log.info("Started pulsing keyboard")
+        self._effect_thread.start()
+        log.info("Keyboard set to solid mute color (all red)")
 
-    def _pulse_loop(self):
+    def set_deafen(self) -> None:
+        """Blackout keyboard with mute button flashing red."""
+        self._stop_effect()
+        if not self._ensure_connected():
+            return
+        self._effect_stop.clear()
+        self._effect_thread = threading.Thread(
+            target=self._deafen_flash_loop, daemon=True
+        )
+        self._effect_thread.start()
+        log.info("Keyboard set to deafen (blackout + mute button flashing)")
+
+    def _deafen_flash_loop(self):
+        """Flash mute button red on/off against a blacked-out keyboard."""
+        grid_on = self._build_deafen_grid_on()
+        grid_off = self._build_deafen_grid_off()
         on = True
-        while not self._pulse_stop.is_set():
-            if on:
-                self._send_static(self.deafen_color_bgr)
-            else:
-                self._send_static(0)  # Black / off
+        while not self._effect_stop.is_set():
+            self._send_grid(grid_on if on else grid_off)
             on = not on
-            self._pulse_stop.wait(self.pulse_interval)
-
-    def _stop_pulse(self):
-        if self._pulse_thread and self._pulse_thread.is_alive():
-            self._pulse_stop.set()
-            self._pulse_thread.join(timeout=2)
-            self._pulse_thread = None
+            self._effect_stop.wait(self.pulse_interval)
 
     def release(self) -> None:
         """Release keyboard back to Synapse profile by killing the session."""
-        self._stop_pulse()
+        self._stop_effect()
         self._heartbeat_stop.set()
         if self._heartbeat_thread:
             self._heartbeat_thread.join(timeout=5)
@@ -162,23 +193,26 @@ class ChromaSession:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    print("Testing Chroma SDK — whole keyboard pulse for 6 seconds...")
 
     session = ChromaSession(
-        mute_color_hex="#AD0014", deafen_color_hex="#AD0014", pulse_interval_ms=500
+        mute_color_hex="#AD0014", deafen_color_hex="#AD0014",
+        mute_button_row=0, mute_button_col=21,
     )
 
-    if session.connect():
-        print("Solid red (mute)...")
-        session.set_solid()
-        time.sleep(3)
-        print("Pulsing red (deafen)...")
-        session.set_pulsing()
-        time.sleep(4)
-        print("Releasing...")
-        session.release()
-        time.sleep(1)
-        session.disconnect()
-        print("Done.")
-    else:
+    if not session.connect():
         print("Could not connect to Chroma SDK.")
+        exit(1)
+
+    print("Test 1: Solid red (mute) — all keys red for 4 seconds...")
+    session.set_solid()
+    time.sleep(4)
+
+    print("Test 2: Deafen — blackout + mute button red for 4 seconds...")
+    session.set_deafen()
+    time.sleep(4)
+
+    print("Releasing back to Synapse profile...")
+    session.release()
+    time.sleep(1)
+    session.disconnect()
+    print("Done.")
