@@ -1136,3 +1136,131 @@
 2026-03-22 17:47:06,750 [INFO] chroma: Session released — Synapse has full control
 2026-03-22 17:47:06,753 [INFO] MasterMute: State -> UNMUTED (from deafened)
 2026-03-22 17:47:09,313 [INFO] chroma: Chroma SDK session established: http://localhost:60531/chromasdk
+2026-03-22 18:03:29,350 [INFO] MasterMute: MasterMute starting...
+2026-03-22 18:03:29,351 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 18:03:29,355 [INFO] audio: Mic mute set to False
+2026-03-22 18:03:29,357 [INFO] audio: Speaker mute set to False
+2026-03-22 18:03:29,357 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 18:03:29,925 [INFO] chroma: Chroma SDK session established: http://localhost:51523/chromasdk
+2026-03-22 18:03:29,925 [INFO] MasterMute: Chroma SDK connected (Synapse still in control)
+2026-03-22 18:03:29,977 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 18:03:29,978 [INFO] MasterMute: MasterMute running.
+2026-03-22 18:03:39,752 [INFO] hotkey: Short press detected (152ms)
+2026-03-22 18:03:39,754 [INFO] audio: Mic mute set to True
+2026-03-22 18:03:39,756 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:03:39,756 [INFO] chroma: Keyboard set to solid mute color (all red)
+2026-03-22 18:03:39,762 [INFO] MasterMute: State -> MUTED
+2026-03-22 18:03:41,428 [INFO] hotkey: Short press detected (117ms)
+2026-03-22 18:03:41,430 [INFO] audio: Mic mute set to False
+2026-03-22 18:03:41,431 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:03:41,434 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:03:41,437 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 18:03:43,995 [INFO] chroma: Chroma SDK session established: http://localhost:64728/chromasdk
+2026-03-22 18:03:45,080 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 18:03:45,082 [INFO] audio: Mic mute set to True
+2026-03-22 18:03:45,084 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 18:03:45,586 [INFO] audio: Speaker mute set to True
+2026-03-22 18:03:45,587 [INFO] chroma: Keyboard set to deafen (blackout + mute button red)
+2026-03-22 18:03:45,592 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 18:03:51,559 [INFO] hotkey: Short press detected (159ms)
+2026-03-22 18:03:51,561 [INFO] audio: Mic mute set to False
+2026-03-22 18:03:51,563 [INFO] audio: Speaker mute set to False
+2026-03-22 18:03:51,565 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 18:03:51,567 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:03:51,571 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 18:03:54,129 [INFO] chroma: Chroma SDK session established: http://localhost:65024/chromasdk
+2026-03-22 18:04:46,469 [INFO] MasterMute: Shutting down...
+2026-03-22 18:04:46,469 [INFO] hotkey: Hotkey listener stopped
+2026-03-22 18:04:46,471 [INFO] MasterMute: MasterMute shut down.
+2026-03-22 18:06:03,930 [INFO] MasterMute: MasterMute starting...
+2026-03-22 18:06:03,930 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 18:06:03,935 [INFO] audio: Mic mute set to False
+2026-03-22 18:06:03,937 [INFO] audio: Speaker mute set to False
+2026-03-22 18:06:03,937 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 18:06:04,503 [INFO] chroma: Chroma SDK session established: http://localhost:64790/chromasdk
+2026-03-22 18:06:04,503 [INFO] MasterMute: Chroma SDK connected (Synapse still in control)
+2026-03-22 18:06:04,558 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 18:06:04,558 [INFO] MasterMute: MasterMute running.
+2026-03-22 18:06:16,690 [INFO] hotkey: Short press detected (117ms)
+2026-03-22 18:06:16,692 [INFO] audio: Mic mute set to True
+2026-03-22 18:06:16,694 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:06:16,694 [INFO] chroma: Keyboard set to solid mute color (all red)
+2026-03-22 18:06:16,703 [INFO] MasterMute: State -> MUTED
+2026-03-22 18:06:18,427 [INFO] hotkey: Short press detected (125ms)
+2026-03-22 18:06:18,429 [INFO] audio: Mic mute set to False
+2026-03-22 18:06:18,431 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:06:18,433 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:06:18,436 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 18:06:21,026 [INFO] chroma: Chroma SDK session established: http://localhost:53188/chromasdk
+2026-03-22 18:06:26,726 [INFO] hotkey: Short press detected (142ms)
+2026-03-22 18:06:26,729 [INFO] audio: Mic mute set to True
+2026-03-22 18:06:26,730 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:06:26,731 [INFO] chroma: Keyboard set to solid mute color (all red)
+2026-03-22 18:06:26,736 [INFO] MasterMute: State -> MUTED
+2026-03-22 18:06:29,312 [INFO] hotkey: Short press detected (116ms)
+2026-03-22 18:06:29,314 [INFO] audio: Mic mute set to False
+2026-03-22 18:06:29,316 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:06:29,318 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:06:29,321 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 18:06:31,883 [INFO] chroma: Chroma SDK session established: http://localhost:55881/chromasdk
+2026-03-22 18:06:53,264 [INFO] MasterMute: Shutting down...
+2026-03-22 18:06:53,264 [INFO] hotkey: Hotkey listener stopped
+2026-03-22 18:06:53,266 [INFO] MasterMute: MasterMute shut down.
+2026-03-22 18:07:16,996 [INFO] MasterMute: MasterMute starting...
+2026-03-22 18:07:16,996 [INFO] MasterMute: Config loaded from C:\Users\Xhoni\Desktop\Coding\master-mute\config.toml
+2026-03-22 18:07:17,001 [INFO] audio: Mic mute set to False
+2026-03-22 18:07:17,003 [INFO] audio: Speaker mute set to False
+2026-03-22 18:07:17,003 [INFO] MasterMute: Startup: forced unmuted state for sync
+2026-03-22 18:07:17,572 [INFO] chroma: Chroma SDK session established: http://localhost:57671/chromasdk
+2026-03-22 18:07:17,573 [INFO] MasterMute: Chroma SDK connected (Synapse still in control)
+2026-03-22 18:07:17,626 [INFO] hotkey: Hotkey listener started for 'ctrl+shift+alt+f8'
+2026-03-22 18:07:17,627 [INFO] MasterMute: MasterMute running.
+2026-03-22 18:07:29,027 [INFO] hotkey: Short press detected (117ms)
+2026-03-22 18:07:29,029 [INFO] audio: Mic mute set to True
+2026-03-22 18:07:29,031 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:07:29,031 [INFO] chroma: Keyboard set to solid mute color (all red)
+2026-03-22 18:07:29,035 [INFO] MasterMute: State -> MUTED
+2026-03-22 18:07:31,043 [INFO] hotkey: Short press detected (102ms)
+2026-03-22 18:07:31,045 [INFO] audio: Mic mute set to False
+2026-03-22 18:07:31,047 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:07:31,049 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:07:31,052 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 18:07:33,613 [INFO] chroma: Chroma SDK session established: http://localhost:60871/chromasdk
+2026-03-22 18:07:37,671 [INFO] hotkey: Short press detected (117ms)
+2026-03-22 18:07:37,673 [INFO] audio: Mic mute set to True
+2026-03-22 18:07:37,675 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:07:37,675 [INFO] chroma: Keyboard set to solid mute color (all red)
+2026-03-22 18:07:37,679 [INFO] MasterMute: State -> MUTED
+2026-03-22 18:07:44,324 [INFO] hotkey: Short press detected (126ms)
+2026-03-22 18:07:44,326 [INFO] audio: Mic mute set to False
+2026-03-22 18:07:44,328 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:07:44,330 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:07:44,333 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 18:07:46,895 [INFO] chroma: Chroma SDK session established: http://localhost:55091/chromasdk
+2026-03-22 18:08:01,164 [INFO] hotkey: Short press detected (117ms)
+2026-03-22 18:08:01,166 [INFO] audio: Mic mute set to True
+2026-03-22 18:08:01,168 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:08:01,168 [INFO] chroma: Keyboard set to solid mute color (all red)
+2026-03-22 18:08:01,173 [INFO] MasterMute: State -> MUTED
+2026-03-22 18:08:02,624 [INFO] hotkey: Short press detected (145ms)
+2026-03-22 18:08:02,626 [INFO] audio: Mic mute set to False
+2026-03-22 18:08:02,628 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f9
+2026-03-22 18:08:02,630 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:08:02,634 [INFO] MasterMute: State -> UNMUTED
+2026-03-22 18:08:05,194 [INFO] chroma: Chroma SDK session established: http://localhost:49305/chromasdk
+2026-03-22 18:08:06,897 [INFO] hotkey: Long press detected (held >= 300ms)
+2026-03-22 18:08:06,899 [INFO] audio: Mic mute set to True
+2026-03-22 18:08:06,901 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 18:08:07,404 [INFO] audio: Speaker mute set to True
+2026-03-22 18:08:07,404 [INFO] chroma: Keyboard set to deafen (blackout + mute button red)
+2026-03-22 18:08:07,414 [INFO] MasterMute: State -> DEAFENED
+2026-03-22 18:08:10,255 [INFO] hotkey: Short press detected (157ms)
+2026-03-22 18:08:10,258 [INFO] audio: Mic mute set to False
+2026-03-22 18:08:10,260 [INFO] audio: Speaker mute set to False
+2026-03-22 18:08:10,261 [INFO] hotkey: Sent Discord hotkey: ctrl+shift+alt+f7
+2026-03-22 18:08:10,263 [INFO] chroma: Session released — Synapse has full control
+2026-03-22 18:08:10,267 [INFO] MasterMute: State -> UNMUTED (from deafened)
+2026-03-22 18:08:12,827 [INFO] chroma: Chroma SDK session established: http://localhost:57871/chromasdk
+2026-03-22 18:08:51,066 [INFO] MasterMute: Shutting down...
+2026-03-22 18:08:51,066 [INFO] hotkey: Hotkey listener stopped
+2026-03-22 18:08:51,068 [INFO] MasterMute: MasterMute shut down.

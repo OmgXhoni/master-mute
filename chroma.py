@@ -160,7 +160,6 @@ class ChromaSession:
         )
         self._effect_thread.start()
         log.info("Keyboard set to deafen (blackout + mute button red)")
-            on = not on
 
     def clear(self) -> None:
         """Delete session so Synapse regains keyboard at full brightness,
