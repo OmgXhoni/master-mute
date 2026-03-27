@@ -13,8 +13,10 @@ unmute_color = "#FFFFFF"
 mute_color = "#FF0000"
 deafen_color = "#FF0000"
 
-mute_button_row = 0
-mute_button_col = 21
+# mute_button_row and mute_button_col are auto-detected from your mute key.
+# Only set these manually if auto-detection picks the wrong key on your keyboard.
+# mute_button_row = 0
+# mute_button_col = 21
 pulse_interval_ms = 500
 
 [logging]

@@ -48,8 +48,9 @@ def save_hotkeys(listen: str, discord_mute: str, discord_deafen: str):
     lines.append(f'mute_color = "{chroma.get("mute_color", "#FF0000")}"')
     lines.append(f'deafen_color = "{chroma.get("deafen_color", "#FF0000")}"')
     lines.append("")
-    lines.append(f'mute_button_row = {chroma.get("mute_button_row", 0)}')
-    lines.append(f'mute_button_col = {chroma.get("mute_button_col", 21)}')
+    if "mute_button_row" in chroma and "mute_button_col" in chroma:
+        lines.append(f'mute_button_row = {chroma["mute_button_row"]}')
+        lines.append(f'mute_button_col = {chroma["mute_button_col"]}')
     lines.append(f'pulse_interval_ms = {chroma.get("pulse_interval_ms", 500)}')
     lines.append("")
 

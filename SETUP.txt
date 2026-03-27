@@ -82,8 +82,12 @@ If you have a Razer keyboard with Synapse 4:
 To disable LED effects, open config.toml and set:  enabled = false
 under [chroma].
 
-If your keyboard's mute button LED is in a different grid position,
-ask Xhoni for help finding the correct row and column values.
+The deafen highlight automatically follows whatever key you set as your
+mute button. If your key is model-specific and the highlight lands on
+the wrong spot, you can manually override it in config.toml by adding:
+    mute_button_row = <number>
+    mute_button_col = <number>
+Ask Xhoni for help finding the correct values for your keyboard.
 
 
 TROUBLESHOOTING

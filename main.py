@@ -239,12 +239,17 @@ class MasterMuteApp:
         # Chroma SDK
         chroma_cfg = self.config.get("chroma", {})
         if chroma_cfg.get("enabled", False):
+            # Extract the main (non-modifier) key from the listen hotkey
+            listen_key = hotkey.HotkeyListener._parse_trigger_key(
+                self.config["hotkeys"]["listen"]
+            )
             self.chroma_session = chroma.ChromaSession(
                 unmute_color_hex=chroma_cfg.get("unmute_color", "#FFFFFF"),
                 mute_color_hex=chroma_cfg.get("mute_color", "#FF0000"),
                 deafen_color_hex=chroma_cfg.get("deafen_color", "#FF0000"),
-                mute_button_row=chroma_cfg.get("mute_button_row", 0),
-                mute_button_col=chroma_cfg.get("mute_button_col", 21),
+                mute_key_name=listen_key,
+                mute_button_row=chroma_cfg.get("mute_button_row"),
+                mute_button_col=chroma_cfg.get("mute_button_col"),
                 pulse_interval_ms=chroma_cfg.get("pulse_interval_ms", 500),
             )
             if self.chroma_session.connect():
