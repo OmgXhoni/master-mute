@@ -6,7 +6,6 @@ import tkinter as tk
 import tomllib
 
 import keyboard
-from PIL import Image, ImageTk
 
 def _app_dir() -> str:
     if getattr(sys, 'frozen', False):
@@ -16,7 +15,6 @@ def _app_dir() -> str:
 APP_DIR = _app_dir()
 CONFIG_PATH = os.path.join(APP_DIR, "config.toml")
 ICON_PATH = os.path.join(APP_DIR, "icon.ico")
-LOGO_PATH = os.path.join(APP_DIR, "logo.png")
 
 
 def load_config() -> dict:
@@ -152,21 +150,10 @@ class KeybindSetupWindow:
         if os.path.exists(ICON_PATH):
             self.root.iconbitmap(ICON_PATH)
 
-        # Header row: logo + title
-        header = tk.Frame(self.root, bg="#ffffff")
-        header.grid(row=0, column=0, columnspan=2, sticky="w", padx=16, pady=(16, 4))
-
-        # Logo in top-left
-        self._logo_img = None
-        if os.path.exists(LOGO_PATH):
-            logo = Image.open(LOGO_PATH).resize((40, 40), Image.LANCZOS)
-            self._logo_img = ImageTk.PhotoImage(logo)
-            logo_lbl = tk.Label(header, image=self._logo_img, bg="#ffffff")
-            logo_lbl.pack(side="left", padx=(0, 10))
-
-        title = tk.Label(header, text="MasterMute", font=("Segoe UI Bold", 16),
+        # Title
+        title = tk.Label(self.root, text="MasterMute", font=("Segoe UI Bold", 16),
                          bg="#ffffff", fg="#000000")
-        title.pack(side="left")
+        title.grid(row=0, column=0, columnspan=2, pady=(16, 4))
 
         subtitle = tk.Label(self.root, text="Click a keybind to change it",
                             font=("Segoe UI", 9), bg="#ffffff", fg="#666666")
