@@ -144,10 +144,25 @@ class MasterMuteApp:
     def _on_long_press(self):
         self._ensure_com()
         with self._lock:
-            if self.state != State.UNMUTED:
-                log.debug("Long press ignored in %s state", self.state.value)
+            if self.state == State.DEAFENED:
+                log.debug("Long press ignored in deafened state")
                 return
 
+            if self.state == State.MUTED:
+                # Already muted — just need to deafen Discord and mute speakers
+                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_mute"])   # unmute Discord first
+                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_deafen"]) # then deafen
+                delay = self.config.get("timing", {}).get("deafen_audio_delay_ms", 500) / 1000.0
+                import time
+                time.sleep(delay)
+                audio.set_speaker_mute(True)
+                self.state = State.DEAFENED
+                self._update_led()
+                self._update_tray()
+                log.info("State -> DEAFENED (from muted)")
+                return
+
+            # From UNMUTED
             audio.set_mic_mute(True)
             hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_deafen"])
             delay = self.config.get("timing", {}).get("deafen_audio_delay_ms", 500) / 1000.0
