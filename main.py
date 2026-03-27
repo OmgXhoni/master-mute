@@ -41,30 +41,53 @@ def load_config() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Tray icons
+# Tray icons — speaker-mute style matching the app icon
 # ---------------------------------------------------------------------------
 
-def _make_circle_icon(color: str, size: int = 64) -> Image.Image:
+def _draw_speaker(draw: ImageDraw.Draw, size: int, color: str):
+    """Draw a speaker silhouette (body + cone + waves)."""
+    s = size
+    cx, cy = s // 2, s // 2
+    rect_w = int(s * 0.12)
+    rect_h = int(s * 0.22)
+    rect_left = cx - int(s * 0.18)
+    rect_top = cy - rect_h // 2
+    draw.rectangle([rect_left, rect_top, rect_left + rect_w, rect_top + rect_h],
+                   fill=color)
+    cone_tip_x = rect_left + rect_w
+    cone_end_x = cx + int(s * 0.08)
+    cone_half_h = int(s * 0.28)
+    draw.polygon([
+        (cone_tip_x, rect_top),
+        (cone_tip_x, rect_top + rect_h),
+        (cone_end_x, cy + cone_half_h),
+        (cone_end_x, cy - cone_half_h),
+    ], fill=color)
+    wave_x = cone_end_x + int(s * 0.06)
+    for radius in [int(s * 0.10), int(s * 0.18)]:
+        arc_bbox = [wave_x - radius, cy - radius, wave_x + radius, cy + radius]
+        width = max(2, int(s * 0.035))
+        draw.arc(arc_bbox, start=-45, end=45, fill=color, width=width)
+
+
+def _make_tray_icon(bg_color: str, speaker_color: str,
+                    slash: bool = False, slash_color: str = "#ff2244",
+                    size: int = 64) -> Image.Image:
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
-    margin = 4
-    draw.ellipse([margin, margin, size - margin, size - margin], fill=color)
+    margin = int(size * 0.04)
+    draw.ellipse([margin, margin, size - margin, size - margin], fill=bg_color)
+    _draw_speaker(draw, size, speaker_color)
+    if slash:
+        slash_w = max(2, int(size * 0.06))
+        pad = int(size * 0.16)
+        draw.line([pad, pad, size - pad, size - pad], fill=slash_color, width=slash_w)
     return img
 
 
-def _make_deafen_icon(size: int = 64) -> Image.Image:
-    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(img)
-    margin = 4
-    draw.ellipse([margin, margin, size - margin, size - margin], fill="#CC0000")
-    draw.line([margin + 4, margin + 4, size - margin - 4, size - margin - 4],
-              fill="#FFFFFF", width=4)
-    return img
-
-
-ICON_UNMUTED = _make_circle_icon("#22CC22")
-ICON_MUTED = _make_circle_icon("#CC0000")
-ICON_DEAFENED = _make_deafen_icon()
+ICON_UNMUTED = _make_tray_icon("#1a3d1a", "#22CC22")
+ICON_MUTED = _make_tray_icon("#3d1a1a", "#CC0000", slash=True, slash_color="#FF4444")
+ICON_DEAFENED = _make_tray_icon("#1a1a2e", "#CC0000", slash=True, slash_color="#FFFFFF")
 
 
 # ---------------------------------------------------------------------------
