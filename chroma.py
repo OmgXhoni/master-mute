@@ -162,15 +162,10 @@ class ChromaSession:
         log.info("Keyboard set to deafen (blackout + mute button red)")
 
     def clear(self) -> None:
-        """Delete session so Synapse regains keyboard at full brightness,
-        then reconnect after a delay (connecting doesn't take over)."""
+        """Delete session so Synapse regains keyboard at full brightness.
+        Reconnect is deferred to next mute/deafen via _ensure_connected()."""
         self._stop_effect()
         self.release()
-        def _delayed_reconnect():
-            time.sleep(2)  # let Synapse fully reclaim at 100% brightness
-            self.connect()
-            log.debug("Background reconnect complete")
-        threading.Thread(target=_delayed_reconnect, daemon=True).start()
         log.info("Session released — Synapse has full control")
 
     def release(self) -> None:
