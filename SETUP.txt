@@ -1,0 +1,105 @@
+MasterMute - Setup Instructions
+================================
+
+MasterMute turns any key (or key combo) into a smart mute button.
+Short press = mute mic + Discord. Long press = full deafen (mic + speakers + Discord).
+Press again to unmute everything. Works with Razer keyboards for LED feedback.
+
+
+WHAT YOU NEED
+-------------
+- Windows 10 or 11
+- Python 3.11 or newer (https://python.org)
+- Discord desktop app
+- Razer Synapse 4 with Chroma SDK enabled (for LED effects, optional)
+
+
+STEP 1: INSTALL DEPENDENCIES
+-----------------------------
+Open a terminal in the master-mute folder and run:
+
+    pip install -r requirements.txt
+
+
+STEP 2: PICK YOUR KEYBINDS
+---------------------------
+Run the keybind setup tool:
+
+    python setup.py
+
+This opens a small window where you set three keybinds:
+
+    Mute Button     - The key you'll press to mute/deafen (e.g. F6, Ctrl+M, etc.)
+    Discord Mute    - A unique key combo for Discord's mute toggle
+    Discord Deafen  - A unique key combo for Discord's deafen toggle
+
+The Discord keybinds should be combos you'd never press by accident
+(e.g. Ctrl+Shift+Alt+F9). Click each field and press the keys you want.
+Hit "Save" when done.
+
+
+STEP 3: SET UP DISCORD
+-----------------------
+Open Discord and go to: Settings > Keybinds
+
+Add two keybinds that MATCH what you set in Step 2:
+
+    Toggle Mute   -> (same as "Discord Mute" from setup)
+    Toggle Deafen -> (same as "Discord Deafen" from setup)
+
+This is how MasterMute talks to Discord - it sends these key combos
+in the background when you press your mute button.
+
+
+STEP 4: RUN IT
+--------------
+    python main.py
+
+A speaker icon appears in your system tray (bottom-right of taskbar).
+Press your mute button to test.
+
+    Short press  = mute (tray icon turns red)
+    Long press   = deafen (tray icon changes)
+    Press again   = unmute
+
+
+AUTO-START WITH WINDOWS
+-----------------------
+1. Press Win+R, type:  shell:startup
+2. Create a shortcut in that folder:
+   - Right-click > New > Shortcut
+   - Target:   pythonw.exe "C:\path\to\master-mute\main.py"
+   - Start in: C:\path\to\master-mute\
+   (Replace the path with wherever you put the master-mute folder)
+
+
+TRAY MENU (right-click the tray icon)
+--------------------------------------
+- Status         - Shows current state (Unmuted / Muted / Deafened)
+- Pause          - Disables the mute button, lets it work normally
+- Change Keybinds - Opens the keybind setup window
+- Open Config    - Opens config.toml for advanced settings
+- Quit           - Shuts down MasterMute
+
+
+RAZER KEYBOARD LED EFFECTS
+---------------------------
+If you have a Razer keyboard with Synapse 4:
+- Mute  = entire keyboard turns red
+- Deafen = keyboard goes dark
+- Unmute = keyboard returns to your Synapse lighting profile
+
+To disable LED effects, open config.toml and set:  enabled = false
+under [chroma].
+
+If your mute button LED is in a different position on your keyboard,
+run:  python discover_keys.py  to find the correct row and column,
+then update mute_button_row and mute_button_col in config.toml.
+
+
+TROUBLESHOOTING
+---------------
+- Button not detected: Try running as administrator
+- Discord won't mute: Make sure Discord keybinds match config.toml
+- No LED effects: Check Chroma SDK is enabled in Synapse 4
+- Check master-mute.log for errors

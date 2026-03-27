@@ -32,7 +32,14 @@ class State(enum.Enum):
 # Config
 # ---------------------------------------------------------------------------
 
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.toml")
+def _app_dir() -> str:
+    """Return the directory where the app lives — works for both script and PyInstaller exe."""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+APP_DIR = _app_dir()
+CONFIG_PATH = os.path.join(APP_DIR, "config.toml")
 
 
 def load_config() -> dict:
@@ -221,6 +228,16 @@ class MasterMuteApp:
     def _open_config(self):
         os.startfile(CONFIG_PATH)
 
+    def _open_keybind_setup(self):
+        """Launch the keybind setup UI."""
+        import subprocess
+        if getattr(sys, 'frozen', False):
+            setup_exe = os.path.join(APP_DIR, "KeybindSetup.exe")
+            subprocess.Popen([setup_exe], cwd=APP_DIR)
+        else:
+            setup_py = os.path.join(APP_DIR, "setup.py")
+            subprocess.Popen([sys.executable, setup_py], cwd=APP_DIR)
+
     def _quit(self, icon=None, item=None):
         if not self._shutting_down:
             log.info("Shutting down...")
@@ -231,6 +248,7 @@ class MasterMuteApp:
             pystray.MenuItem(self._get_status_text, None, enabled=False),
             pystray.Menu.SEPARATOR,
             pystray.MenuItem(self._get_pause_text, lambda: self._toggle_pause()),
+            pystray.MenuItem("Change Keybinds", lambda: self._open_keybind_setup()),
             pystray.MenuItem("Open Config", lambda: self._open_config()),
             pystray.MenuItem("Quit", self._quit),
         )
@@ -338,7 +356,7 @@ def main():
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         handlers=[
             logging.FileHandler(
-                os.path.join(os.path.dirname(os.path.abspath(__file__)), log_file)
+                os.path.join(APP_DIR, log_file)
             ),
             logging.StreamHandler(),
         ],
