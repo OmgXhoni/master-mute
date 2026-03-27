@@ -6,13 +6,17 @@ import tkinter as tk
 import tomllib
 
 import keyboard
+from PIL import Image, ImageTk
 
 def _app_dir() -> str:
     if getattr(sys, 'frozen', False):
         return os.path.dirname(sys.executable)
     return os.path.dirname(os.path.abspath(__file__))
 
-CONFIG_PATH = os.path.join(_app_dir(), "config.toml")
+APP_DIR = _app_dir()
+CONFIG_PATH = os.path.join(APP_DIR, "config.toml")
+ICON_PATH = os.path.join(APP_DIR, "icon.ico")
+LOGO_PATH = os.path.join(APP_DIR, "logo.png")
 
 
 def load_config() -> dict:
@@ -26,9 +30,9 @@ def save_hotkeys(listen: str, discord_mute: str, discord_deafen: str):
 
     lines = []
     lines.append("[hotkeys]")
-    lines.append(f'listen = "{listen}"')
-    lines.append(f'discord_mute = "{discord_mute}"')
-    lines.append(f'discord_deafen = "{discord_deafen}"')
+    lines.append(f'listen = "{listen.lower()}"')
+    lines.append(f'discord_mute = "{discord_mute.lower()}"')
+    lines.append(f'discord_deafen = "{discord_deafen.lower()}"')
     lines.append("")
 
     timing = cfg.get("timing", {})
@@ -69,13 +73,13 @@ class KeybindEntry:
         self._hook = None
 
         lbl = tk.Label(parent, text=label_text, font=("Segoe UI", 11),
-                       anchor="w", bg="#1a1a2e", fg="#e0e0e0")
+                       anchor="w", bg="#ffffff", fg="#000000")
         lbl.grid(row=row, column=0, sticky="w", padx=(20, 10), pady=8)
 
         self.btn = tk.Button(
-            parent, text=initial_value, font=("Segoe UI Semibold", 11),
-            width=28, bg="#2a2a4a", fg="#ffffff", activebackground="#3a3a5a",
-            activeforeground="#ffffff", relief="flat", cursor="hand2",
+            parent, text=initial_value.upper(), font=("Segoe UI Semibold", 11),
+            width=28, bg="#e8e8e8", fg="#000000", activebackground="#d0d0d0",
+            activeforeground="#000000", relief="flat", cursor="hand2",
             command=self._start_capture,
         )
         self.btn.grid(row=row, column=1, padx=(0, 20), pady=8)
@@ -85,13 +89,12 @@ class KeybindEntry:
             return
         self._capturing = True
         self._pressed_keys = set()
-        self.btn.config(text="Press keys...", bg="#4a2a2a")
+        self.btn.config(text="PRESS KEYS...", bg="#ffe0e0")
         self._hook = keyboard.hook(self._on_key, suppress=True)
 
     def _on_key(self, event: keyboard.KeyboardEvent):
         if event.event_type == keyboard.KEY_DOWN:
             name = event.name.lower()
-            # Normalize modifier names
             if name in ("left ctrl", "right ctrl"):
                 name = "ctrl"
             elif name in ("left shift", "right shift"):
@@ -111,7 +114,6 @@ class KeybindEntry:
             keyboard.unhook(self._hook)
             self._hook = None
 
-        # Build combo string: modifiers first, then the main key
         mods = []
         main_key = None
         mod_names = {"ctrl", "shift", "alt"}
@@ -131,7 +133,7 @@ class KeybindEntry:
 
         combo = "+".join(parts) if parts else self.value
         self.value = combo
-        self.btn.config(text=combo, bg="#2a2a4a")
+        self.btn.config(text=combo.upper(), bg="#e8e8e8")
 
 
 class KeybindSetupWindow:
@@ -141,26 +143,42 @@ class KeybindSetupWindow:
         hotkeys = cfg.get("hotkeys", {})
 
         self.root = tk.Tk()
-        self.root.title("MasterMute — Keybind Setup")
-        self.root.configure(bg="#1a1a2e")
+        self.root.title("MasterMute - Keybind Setup")
+        self.root.configure(bg="#ffffff")
         self.root.resizable(False, False)
 
-        # Title
-        title = tk.Label(self.root, text="MasterMute", font=("Segoe UI Bold", 16),
-                         bg="#1a1a2e", fg="#ffffff")
-        title.grid(row=0, column=0, columnspan=2, pady=(16, 4))
+        # Window icon (title bar)
+        if os.path.exists(ICON_PATH):
+            self.root.iconbitmap(ICON_PATH)
+
+        # Header row: logo + title
+        header = tk.Frame(self.root, bg="#ffffff")
+        header.grid(row=0, column=0, columnspan=2, sticky="w", padx=16, pady=(16, 4))
+
+        # Logo in top-left
+        self._logo_img = None
+        if os.path.exists(LOGO_PATH):
+            logo = Image.open(LOGO_PATH).resize((40, 40), Image.LANCZOS)
+            self._logo_img = ImageTk.PhotoImage(logo)
+            logo_lbl = tk.Label(header, image=self._logo_img, bg="#ffffff")
+            logo_lbl.pack(side="left", padx=(0, 10))
+
+        title = tk.Label(header, text="MasterMute", font=("Segoe UI Bold", 16),
+                         bg="#ffffff", fg="#000000")
+        title.pack(side="left")
+
         subtitle = tk.Label(self.root, text="Click a keybind to change it",
-                            font=("Segoe UI", 9), bg="#1a1a2e", fg="#888888")
+                            font=("Segoe UI", 9), bg="#ffffff", fg="#666666")
         subtitle.grid(row=1, column=0, columnspan=2, pady=(0, 12))
 
         self.listen_entry = KeybindEntry(
-            self.root, "Mute Button:", hotkeys.get("listen", "ctrl+shift+alt+f8"), row=2
+            self.root, "Mute Button:", hotkeys.get("listen", "ctrl+shift+alt+f7"), row=2
         )
         self.discord_mute_entry = KeybindEntry(
-            self.root, "Discord Mute:", hotkeys.get("discord_mute", "ctrl+shift+alt+f9"), row=3
+            self.root, "Discord Mute:", hotkeys.get("discord_mute", "ctrl+shift+alt+f8"), row=3
         )
         self.discord_deafen_entry = KeybindEntry(
-            self.root, "Discord Deafen:", hotkeys.get("discord_deafen", "ctrl+shift+alt+f7"), row=4
+            self.root, "Discord Deafen:", hotkeys.get("discord_deafen", "ctrl+shift+alt+f9"), row=4
         )
 
         save_btn = tk.Button(

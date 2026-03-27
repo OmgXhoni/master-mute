@@ -1,74 +1,112 @@
-"""Generate MasterMute app icon — speaker-with-slash mute symbol.
+"""Generate MasterMute icon.ico and logo.png from scratch using Pillow.
 
-Run once to create icon.ico in the project directory.
+Reproduces the SVG design: black circle, white speaker silhouette, red X.
 """
+
+import os
+import math
 
 from PIL import Image, ImageDraw
 
-def draw_speaker_muted(size: int, bg_color: str = "#1a1a2e",
-                       speaker_color: str = "#e0e0e0",
-                       slash_color: str = "#ff2244") -> Image.Image:
-    """Draw a speaker icon with a diagonal red slash (mute symbol)."""
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ICO_PATH = os.path.join(SCRIPT_DIR, "icon.ico")
+LOGO_PATH = os.path.join(SCRIPT_DIR, "logo.png")
+
+
+def draw_icon(size: int) -> Image.Image:
+    """Draw the MasterMute icon at the given size.
+
+    Design: black circle background, white speaker (body + cone + crossbar),
+    red X overlay on the right side.
+    """
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
-
-    # Background circle
-    margin = int(size * 0.04)
-    draw.ellipse([margin, margin, size - margin, size - margin], fill=bg_color)
-
-    # Speaker body — rectangle + triangle cone
-    # Scale everything relative to size
     s = size
-    cx, cy = s // 2, s // 2
+    cx, cy = s / 2, s / 2
+    r = s * 0.489  # circle radius (391.52/800)
 
-    # Speaker rectangle (left part)
-    rect_w = int(s * 0.12)
-    rect_h = int(s * 0.22)
-    rect_left = cx - int(s * 0.18)
-    rect_top = cy - rect_h // 2
-    draw.rectangle([rect_left, rect_top, rect_left + rect_w, rect_top + rect_h],
-                   fill=speaker_color)
+    # Black circle background
+    draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill="#000000")
 
-    # Speaker cone (triangle from rectangle to wider opening)
-    cone_tip_x = rect_left + rect_w
-    cone_end_x = cx + int(s * 0.08)
-    cone_half_h = int(s * 0.28)
+    # --- Speaker body (left side) ---
+    # Rectangle part of speaker
+    rect_left = s * 0.148
+    rect_right = s * 0.245
+    rect_top = cy - s * 0.113
+    rect_bottom = cy + s * 0.113
+    draw.rectangle([rect_left, rect_top, rect_right, rect_bottom], fill="#ffffff")
+
+    # Cone (trapezoid from rectangle to wider opening)
+    cone_left = rect_right
+    cone_right = s * 0.48
+    cone_half_narrow = s * 0.113
+    cone_half_wide = s * 0.185
     draw.polygon([
-        (cone_tip_x, rect_top),
-        (cone_tip_x, rect_top + rect_h),
-        (cone_end_x, cy + cone_half_h),
-        (cone_end_x, cy - cone_half_h),
-    ], fill=speaker_color)
+        (cone_left, cy - cone_half_narrow),
+        (cone_left, cy + cone_half_narrow),
+        (cone_right, cy + cone_half_wide),
+        (cone_right, cy - cone_half_wide),
+    ], fill="#ffffff")
 
-    # Sound waves (arcs) — two curved lines to the right of the cone
-    wave_x = cone_end_x + int(s * 0.06)
-    for i, radius in enumerate([int(s * 0.10), int(s * 0.18)]):
-        arc_bbox = [wave_x - radius, cy - radius, wave_x + radius, cy + radius]
-        width = max(2, int(s * 0.035))
-        draw.arc(arc_bbox, start=-45, end=45, fill=speaker_color, width=width)
+    # --- White crossbar (horizontal bar across the X area) ---
+    bar_left = s * 0.517
+    bar_right = s * 0.852
+    bar_h = s * 0.047
+    bar_r = bar_h / 2  # rounded ends
+    draw.rounded_rectangle(
+        [bar_left, cy - bar_h / 2, bar_right, cy + bar_h / 2],
+        radius=bar_r, fill="#ffffff"
+    )
 
-    # Diagonal red slash
-    slash_w = max(3, int(s * 0.06))
-    pad = int(s * 0.16)
-    draw.line([pad, pad, s - pad, s - pad], fill=slash_color, width=slash_w)
+    # --- White vertical bar ---
+    draw.rounded_rectangle(
+        [cx + s * 0.185 - bar_h / 2, cy - (bar_right - bar_left) / 2,
+         cx + s * 0.185 + bar_h / 2, cy + (bar_right - bar_left) / 2],
+        radius=bar_r, fill="#ffffff"
+    )
+
+    # --- Red X overlay ---
+    x_cx = cx + s * 0.185  # center of the X area
+    x_cy = cy
+    arm_len = s * 0.145
+    line_w = max(2, int(s * 0.047))
+
+    # Top-left to bottom-right
+    draw.line(
+        [x_cx - arm_len, x_cy - arm_len, x_cx + arm_len, x_cy + arm_len],
+        fill="#ed1c24", width=line_w
+    )
+    # Top-right to bottom-left
+    draw.line(
+        [x_cx + arm_len, x_cy - arm_len, x_cx - arm_len, x_cy + arm_len],
+        fill="#ed1c24", width=line_w
+    )
+
+    # Round line caps by drawing circles at the endpoints
+    cap_r = line_w / 2
+    for dx, dy in [(-1, -1), (1, 1), (1, -1), (-1, 1)]:
+        ex, ey = x_cx + dx * arm_len, x_cy + dy * arm_len
+        draw.ellipse([ex - cap_r, ey - cap_r, ex + cap_r, ey + cap_r], fill="#ed1c24")
 
     return img
 
 
 def main():
     sizes = [16, 32, 48, 256]
-    images = [draw_speaker_muted(s) for s in sizes]
+    images = [draw_icon(s) for s in sizes]
 
-    # Save as .ico with multiple sizes
-    out_path = "icon.ico"
-    images[-1].save(out_path, format="ICO",
+    # Save .ico
+    images[-1].save(ICO_PATH, format="ICO",
                     sizes=[(s, s) for s in sizes],
                     append_images=images[:-1])
-    print(f"Saved {out_path} with sizes {sizes}")
+    print(f"Saved {ICO_PATH} with sizes {sizes}")
 
-    # Also save a 256px preview PNG for inspection
-    images[-1].save("icon_preview.png")
-    print("Saved icon_preview.png for visual check")
+    # Save 48px PNG for tray/setup logo, and 256px for preview
+    images[2].save(LOGO_PATH)
+    print(f"Saved {LOGO_PATH} (48px)")
+
+    images[-1].save(os.path.join(SCRIPT_DIR, "icon_preview.png"))
+    print("Saved icon_preview.png (256px)")
 
 
 if __name__ == "__main__":

@@ -48,53 +48,23 @@ def load_config() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Tray icons — speaker-mute style matching the app icon
+# Tray icon — uses the MasterMute logo for all states
 # ---------------------------------------------------------------------------
 
-def _draw_speaker(draw: ImageDraw.Draw, size: int, color: str):
-    """Draw a speaker silhouette (body + cone + waves)."""
-    s = size
-    cx, cy = s // 2, s // 2
-    rect_w = int(s * 0.12)
-    rect_h = int(s * 0.22)
-    rect_left = cx - int(s * 0.18)
-    rect_top = cy - rect_h // 2
-    draw.rectangle([rect_left, rect_top, rect_left + rect_w, rect_top + rect_h],
-                   fill=color)
-    cone_tip_x = rect_left + rect_w
-    cone_end_x = cx + int(s * 0.08)
-    cone_half_h = int(s * 0.28)
-    draw.polygon([
-        (cone_tip_x, rect_top),
-        (cone_tip_x, rect_top + rect_h),
-        (cone_end_x, cy + cone_half_h),
-        (cone_end_x, cy - cone_half_h),
-    ], fill=color)
-    wave_x = cone_end_x + int(s * 0.06)
-    for radius in [int(s * 0.10), int(s * 0.18)]:
-        arc_bbox = [wave_x - radius, cy - radius, wave_x + radius, cy + radius]
-        width = max(2, int(s * 0.035))
-        draw.arc(arc_bbox, start=-45, end=45, fill=color, width=width)
-
-
-def _make_tray_icon(bg_color: str, speaker_color: str,
-                    slash: bool = False, slash_color: str = "#ff2244",
-                    size: int = 64) -> Image.Image:
-    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+def _load_tray_icon() -> Image.Image:
+    """Load the MasterMute logo.png as the tray icon."""
+    logo_path = os.path.join(APP_DIR, "logo.png")
+    if os.path.exists(logo_path):
+        return Image.open(logo_path).convert("RGBA")
+    # Fallback: simple circle if logo is missing
+    img = Image.new("RGBA", (64, 64), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
-    margin = int(size * 0.04)
-    draw.ellipse([margin, margin, size - margin, size - margin], fill=bg_color)
-    _draw_speaker(draw, size, speaker_color)
-    if slash:
-        slash_w = max(2, int(size * 0.06))
-        pad = int(size * 0.16)
-        draw.line([pad, pad, size - pad, size - pad], fill=slash_color, width=slash_w)
+    draw.ellipse([4, 4, 60, 60], fill="#000000")
     return img
 
-
-ICON_UNMUTED = _make_tray_icon("#1a3d1a", "#22CC22")
-ICON_MUTED = _make_tray_icon("#3d1a1a", "#CC0000", slash=True, slash_color="#FF4444")
-ICON_DEAFENED = _make_tray_icon("#1a1a2e", "#CC0000", slash=True, slash_color="#FFFFFF")
+ICON_UNMUTED = _load_tray_icon()
+ICON_MUTED = _load_tray_icon()
+ICON_DEAFENED = _load_tray_icon()
 
 
 # ---------------------------------------------------------------------------
