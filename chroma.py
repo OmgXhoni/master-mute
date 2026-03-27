@@ -1,4 +1,4 @@
-"""Razer Chroma SDK REST API wrapper — CHROMA_STATIC for mute/deafen states."""
+"""Razer Chroma SDK REST API wrapper — per-key CHROMA_CUSTOM for mute/deafen states."""
 
 import logging
 import threading
@@ -10,6 +10,66 @@ log = logging.getLogger(__name__)
 
 CHROMA_BASE = "http://localhost:54235/razer/chromasdk"
 HEARTBEAT_INTERVAL = 10  # seconds
+GRID_ROWS = 6
+GRID_COLS = 22
+EFFECT_REFRESH_INTERVAL = 0.2  # seconds between re-sends to hold effect
+
+
+# Standard Razer Chroma 6x22 grid key positions.
+# Maps keyboard library key names to (row, col) tuples.
+KEY_GRID_MAP = {
+    # Row 0: Esc, F1-F12, PrtSc, ScrLk, Pause, media keys
+    "esc": (0, 1), "f1": (0, 3), "f2": (0, 4), "f3": (0, 5), "f4": (0, 6),
+    "f5": (0, 7), "f6": (0, 8), "f7": (0, 9), "f8": (0, 10), "f9": (0, 11),
+    "f10": (0, 12), "f11": (0, 13), "f12": (0, 14),
+    "print screen": (0, 15), "scroll lock": (0, 16), "pause": (0, 17),
+    # Row 1: `/~, 1-0, -/_, =/+, Backspace, Ins, Home, PgUp, NumLock, Num/, Num*, Num-
+    "`": (1, 1), "1": (1, 2), "2": (1, 3), "3": (1, 4), "4": (1, 5),
+    "5": (1, 6), "6": (1, 7), "7": (1, 8), "8": (1, 9), "9": (1, 10),
+    "0": (1, 11), "-": (1, 12), "=": (1, 13), "backspace": (1, 14),
+    "insert": (1, 15), "home": (1, 16), "page up": (1, 17),
+    "num lock": (1, 18), "num /": (1, 19), "num *": (1, 20), "num -": (1, 21),
+    # Row 2: Tab, Q-P, [, ], \, Del, End, PgDn, Num7-9, Num+
+    "tab": (2, 1), "q": (2, 2), "w": (2, 3), "e": (2, 4), "r": (2, 5),
+    "t": (2, 6), "y": (2, 7), "u": (2, 8), "i": (2, 9), "o": (2, 10),
+    "p": (2, 11), "[": (2, 12), "]": (2, 13), "\\": (2, 14),
+    "delete": (2, 15), "end": (2, 16), "page down": (2, 17),
+    "num 7": (2, 18), "num 8": (2, 19), "num 9": (2, 20), "num +": (2, 21),
+    # Row 3: CapsLock, A-L, ;, ', Enter, Num4-6
+    "caps lock": (3, 1), "a": (3, 2), "s": (3, 3), "d": (3, 4), "f": (3, 5),
+    "g": (3, 6), "h": (3, 7), "j": (3, 8), "k": (3, 9), "l": (3, 10),
+    ";": (3, 11), "'": (3, 12), "enter": (3, 14),
+    "num 4": (3, 18), "num 5": (3, 19), "num 6": (3, 20),
+    # Row 4: LShift, Z-M, commas, period, /, RShift, Up, Num1-3, NumEnter
+    "left shift": (4, 1), "shift": (4, 1),
+    "z": (4, 2), "x": (4, 3), "c": (4, 4), "v": (4, 5), "b": (4, 6),
+    "n": (4, 7), "m": (4, 8), ",": (4, 9), ".": (4, 10), "/": (4, 11),
+    "right shift": (4, 14), "up": (4, 16),
+    "num 1": (4, 18), "num 2": (4, 19), "num 3": (4, 20), "num enter": (4, 21),
+    # Row 5: LCtrl, Win, LAlt, Space, RAlt, Fn, Menu, RCtrl, Left, Down, Right, Num0, Num.
+    "left ctrl": (5, 1), "ctrl": (5, 1), "left windows": (5, 2),
+    "left alt": (5, 3), "alt": (5, 3), "space": (5, 7),
+    "right alt": (5, 11), "right windows": (5, 12),
+    "menu": (5, 13), "right ctrl": (5, 14),
+    "left": (5, 15), "down": (5, 16), "right": (5, 17),
+    "num 0": (5, 18), "num .": (5, 20),
+}
+
+
+def resolve_key_position(key_name: str | None,
+                         override_row: int | None,
+                         override_col: int | None) -> tuple[int, int] | None:
+    """Resolve the grid position for a key.
+
+    Priority: manual override > auto-lookup > None (full blackout).
+    """
+    if override_row is not None and override_col is not None:
+        return (override_row, override_col)
+    if key_name:
+        pos = KEY_GRID_MAP.get(key_name.lower())
+        if pos:
+            return pos
+    return None
 
 
 def hex_to_bgr(hex_color: str) -> int:
@@ -22,19 +82,27 @@ def hex_to_bgr(hex_color: str) -> int:
 
 
 class ChromaSession:
-    """Manages a Chroma SDK session for whole-keyboard effects."""
+    """Manages a Chroma SDK session for per-key keyboard effects."""
 
-    def __init__(self, mute_color_hex: str, deafen_color_hex: str,
+    def __init__(self, unmute_color_hex: str, mute_color_hex: str,
+                 deafen_color_hex: str,
+                 mute_key_name: str | None = None,
+                 mute_button_row: int | None = None,
+                 mute_button_col: int | None = None,
                  pulse_interval_ms: int = 500):
+        self.unmute_color_bgr = hex_to_bgr(unmute_color_hex)
         self.mute_color_bgr = hex_to_bgr(mute_color_hex)
         self.deafen_color_bgr = hex_to_bgr(deafen_color_hex)
+        self.mute_key_pos = resolve_key_position(
+            mute_key_name, mute_button_row, mute_button_col
+        )
         self.pulse_interval = pulse_interval_ms / 1000.0
         self.session_uri = None
         self.connected = False
         self._heartbeat_thread = None
         self._heartbeat_stop = threading.Event()
-        self._pulse_thread = None
-        self._pulse_stop = threading.Event()
+        self._effect_thread = None
+        self._effect_stop = threading.Event()
 
     def connect(self) -> bool:
         """Initialize a Chroma SDK session."""
@@ -54,7 +122,6 @@ class ChromaSession:
                 log.warning("Chroma SDK returned no session URI: %s", data)
                 return False
             self.connected = True
-            # Small delay to let session stabilize
             time.sleep(0.5)
             self._start_heartbeat()
             log.info("Chroma SDK session established: %s", self.session_uri)
@@ -82,66 +149,90 @@ class ChromaSession:
             except Exception as e:
                 log.warning("Heartbeat failed: %s", e)
 
-    def _send_static(self, color_bgr: int) -> bool:
-        """Send a CHROMA_STATIC effect to the keyboard."""
+    def _send_grid(self, grid: list) -> bool:
+        """Send a CHROMA_CUSTOM effect (6x22 grid) to the keyboard."""
         if not self.connected or not self.session_uri:
             return False
         try:
             resp = requests.put(
                 f"{self.session_uri}/keyboard",
-                json={"effect": "CHROMA_STATIC", "param": {"color": color_bgr}},
+                json={"effect": "CHROMA_CUSTOM", "param": grid},
                 timeout=5,
             )
             return resp.status_code == 200
         except Exception as e:
-            log.warning("Failed to send static effect: %s", e)
+            log.warning("Failed to send grid effect: %s", e)
             return False
 
+    def _build_mute_grid(self) -> list:
+        """All keys red."""
+        return [[self.mute_color_bgr] * GRID_COLS for _ in range(GRID_ROWS)]
+
+    def _build_deafen_grid_on(self) -> list:
+        """All keys black, mute button red (if position known)."""
+        grid = [[0] * GRID_COLS for _ in range(GRID_ROWS)]
+        if self.mute_key_pos:
+            row, col = self.mute_key_pos
+            grid[row][col] = self.deafen_color_bgr
+        return grid
+
+    def _build_deafen_grid_off(self) -> list:
+        """All keys black, mute button also black."""
+        return [[0] * GRID_COLS for _ in range(GRID_ROWS)]
+
     def _ensure_connected(self) -> bool:
-        """Reconnect if session was released."""
         if not self.connected:
             return self.connect()
         return True
 
+    def _stop_effect(self):
+        if self._effect_thread and self._effect_thread.is_alive():
+            self._effect_stop.set()
+            self._effect_thread.join(timeout=2)
+            self._effect_thread = None
+
+    def _effect_loop(self, grid: list):
+        """Repeatedly send a grid to hold the effect against Synapse."""
+        while not self._effect_stop.is_set():
+            self._send_grid(grid)
+            self._effect_stop.wait(EFFECT_REFRESH_INTERVAL)
+
     def set_solid(self) -> None:
         """Set the entire keyboard to solid mute color."""
-        self._stop_pulse()
+        self._stop_effect()
         if not self._ensure_connected():
             return
-        self._send_static(self.mute_color_bgr)
-        log.info("Keyboard set to solid mute color")
-
-    def set_pulsing(self) -> None:
-        """Start pulsing the entire keyboard with deafen color."""
-        self._stop_pulse()
-        if not self._ensure_connected():
-            return
-        self._pulse_stop.clear()
-        self._pulse_thread = threading.Thread(
-            target=self._pulse_loop, daemon=True
+        grid = self._build_mute_grid()
+        self._effect_stop.clear()
+        self._effect_thread = threading.Thread(
+            target=self._effect_loop, args=(grid,), daemon=True
         )
-        self._pulse_thread.start()
-        log.info("Started pulsing keyboard")
+        self._effect_thread.start()
+        log.info("Keyboard set to solid mute color (all red)")
 
-    def _pulse_loop(self):
-        on = True
-        while not self._pulse_stop.is_set():
-            if on:
-                self._send_static(self.deafen_color_bgr)
-            else:
-                self._send_static(0)  # Black / off
-            on = not on
-            self._pulse_stop.wait(self.pulse_interval)
+    def set_deafen(self) -> None:
+        """Blackout keyboard with mute button solid red."""
+        self._stop_effect()
+        if not self._ensure_connected():
+            return
+        grid = self._build_deafen_grid_on()
+        self._effect_stop.clear()
+        self._effect_thread = threading.Thread(
+            target=self._effect_loop, args=(grid,), daemon=True
+        )
+        self._effect_thread.start()
+        log.info("Keyboard set to deafen (blackout + mute button red)")
 
-    def _stop_pulse(self):
-        if self._pulse_thread and self._pulse_thread.is_alive():
-            self._pulse_stop.set()
-            self._pulse_thread.join(timeout=2)
-            self._pulse_thread = None
+    def clear(self) -> None:
+        """Delete session so Synapse regains keyboard at full brightness.
+        Reconnect is deferred to next mute/deafen via _ensure_connected()."""
+        self._stop_effect()
+        self.release()
+        log.info("Session released — Synapse has full control")
 
     def release(self) -> None:
-        """Release keyboard back to Synapse profile by killing the session."""
-        self._stop_pulse()
+        """Full teardown: stop effects, kill heartbeat, delete session."""
+        self._stop_effect()
         self._heartbeat_stop.set()
         if self._heartbeat_thread:
             self._heartbeat_thread.join(timeout=5)
@@ -149,7 +240,7 @@ class ChromaSession:
         if self.connected and self.session_uri:
             try:
                 requests.delete(self.session_uri, timeout=5)
-                log.debug("Chroma session deleted — keyboard released to Synapse")
+                log.debug("Chroma session deleted")
             except Exception as e:
                 log.warning("Failed to delete Chroma session: %s", e)
         self.connected = False
@@ -162,23 +253,26 @@ class ChromaSession:
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
-    print("Testing Chroma SDK — whole keyboard pulse for 6 seconds...")
 
     session = ChromaSession(
-        mute_color_hex="#AD0014", deafen_color_hex="#AD0014", pulse_interval_ms=500
+        mute_color_hex="#AD0014", deafen_color_hex="#AD0014",
+        mute_key_name="f7",
     )
 
-    if session.connect():
-        print("Solid red (mute)...")
-        session.set_solid()
-        time.sleep(3)
-        print("Pulsing red (deafen)...")
-        session.set_pulsing()
-        time.sleep(4)
-        print("Releasing...")
-        session.release()
-        time.sleep(1)
-        session.disconnect()
-        print("Done.")
-    else:
+    if not session.connect():
         print("Could not connect to Chroma SDK.")
+        exit(1)
+
+    print("Test 1: Solid red (mute) — all keys red for 4 seconds...")
+    session.set_solid()
+    time.sleep(4)
+
+    print("Test 2: Deafen — blackout + mute button red for 4 seconds...")
+    session.set_deafen()
+    time.sleep(4)
+
+    print("Releasing back to Synapse profile...")
+    session.release()
+    time.sleep(1)
+    session.disconnect()
+    print("Done.")

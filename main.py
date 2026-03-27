@@ -32,7 +32,14 @@ class State(enum.Enum):
 # Config
 # ---------------------------------------------------------------------------
 
-CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.toml")
+def _app_dir() -> str:
+    """Return the directory where the app lives — works for both script and PyInstaller exe."""
+    if getattr(sys, 'frozen', False):
+        return os.path.dirname(sys.executable)
+    return os.path.dirname(os.path.abspath(__file__))
+
+APP_DIR = _app_dir()
+CONFIG_PATH = os.path.join(APP_DIR, "config.toml")
 
 
 def load_config() -> dict:
@@ -41,30 +48,19 @@ def load_config() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Tray icons
+# Tray icon — loaded from mastermute.png source
 # ---------------------------------------------------------------------------
 
 def _make_circle_icon(color: str, size: int = 64) -> Image.Image:
+    """Draw a solid colored circle for the tray icon."""
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
-    margin = 4
-    draw.ellipse([margin, margin, size - margin, size - margin], fill=color)
+    draw.ellipse([4, 4, size - 4, size - 4], fill=color)
     return img
 
-
-def _make_deafen_icon(size: int = 64) -> Image.Image:
-    img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(img)
-    margin = 4
-    draw.ellipse([margin, margin, size - margin, size - margin], fill="#CC0000")
-    draw.line([margin + 4, margin + 4, size - margin - 4, size - margin - 4],
-              fill="#FFFFFF", width=4)
-    return img
-
-
-ICON_UNMUTED = _make_circle_icon("#22CC22")
-ICON_MUTED = _make_circle_icon("#CC0000")
-ICON_DEAFENED = _make_deafen_icon()
+ICON_UNMUTED = _make_circle_icon("#22CC22")   # Green
+ICON_MUTED = _make_circle_icon("#FF0000")     # Red
+ICON_DEAFENED = _make_circle_icon("#FF8800")   # Orange
 
 
 # ---------------------------------------------------------------------------
@@ -81,6 +77,8 @@ class MasterMuteApp:
         self.chroma_session: chroma.ChromaSession = None
         self.listener: hotkey.HotkeyListener = None
         self._shutting_down = False
+        self._config_mtime = 0.0
+        self._config_watcher: threading.Timer = None
 
     def _ensure_com(self):
         tid = threading.current_thread().ident
@@ -121,10 +119,25 @@ class MasterMuteApp:
     def _on_long_press(self):
         self._ensure_com()
         with self._lock:
-            if self.state != State.UNMUTED:
-                log.debug("Long press ignored in %s state", self.state.value)
+            if self.state == State.DEAFENED:
+                log.debug("Long press ignored in deafened state")
                 return
 
+            if self.state == State.MUTED:
+                # Already muted — just need to deafen Discord and mute speakers
+                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_mute"])   # unmute Discord first
+                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_deafen"]) # then deafen
+                delay = self.config.get("timing", {}).get("deafen_audio_delay_ms", 500) / 1000.0
+                import time
+                time.sleep(delay)
+                audio.set_speaker_mute(True)
+                self.state = State.DEAFENED
+                self._update_led()
+                self._update_tray()
+                log.info("State -> DEAFENED (from muted)")
+                return
+
+            # From UNMUTED
             audio.set_mic_mute(True)
             hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_deafen"])
             delay = self.config.get("timing", {}).get("deafen_audio_delay_ms", 500) / 1000.0
@@ -139,14 +152,14 @@ class MasterMuteApp:
     # --- LED ---
 
     def _update_led(self):
-        if self.chroma_session is None or not self.chroma_session.connected:
+        if self.chroma_session is None:
             return
         if self.state == State.UNMUTED:
-            self.chroma_session.release()
+            self.chroma_session.clear()
         elif self.state == State.MUTED:
             self.chroma_session.set_solid()
         elif self.state == State.DEAFENED:
-            self.chroma_session.set_pulsing()
+            self.chroma_session.set_deafen()
 
     # --- Tray ---
 
@@ -183,6 +196,16 @@ class MasterMuteApp:
     def _open_config(self):
         os.startfile(CONFIG_PATH)
 
+    def _open_keybind_setup(self):
+        """Launch the keybind setup UI."""
+        import subprocess
+        if getattr(sys, 'frozen', False):
+            setup_exe = os.path.join(APP_DIR, "KeybindSetup.exe")
+            subprocess.Popen([setup_exe], cwd=APP_DIR)
+        else:
+            setup_py = os.path.join(APP_DIR, "setup.py")
+            subprocess.Popen([sys.executable, setup_py], cwd=APP_DIR)
+
     def _quit(self, icon=None, item=None):
         if not self._shutting_down:
             log.info("Shutting down...")
@@ -193,9 +216,65 @@ class MasterMuteApp:
             pystray.MenuItem(self._get_status_text, None, enabled=False),
             pystray.Menu.SEPARATOR,
             pystray.MenuItem(self._get_pause_text, lambda: self._toggle_pause()),
+            pystray.MenuItem("Change Keybinds", lambda: self._open_keybind_setup()),
             pystray.MenuItem("Open Config", lambda: self._open_config()),
             pystray.MenuItem("Quit", self._quit),
         )
+
+    # --- Config hot-reload ---
+
+    def _watch_config(self):
+        """Poll config.toml for changes and reload hotkeys if modified."""
+        if self._shutting_down:
+            return
+        try:
+            mtime = os.path.getmtime(CONFIG_PATH)
+            if mtime > self._config_mtime:
+                self._config_mtime = mtime
+                self._reload_config()
+        except Exception as e:
+            log.debug("Config watch error: %s", e)
+        self._config_watcher = threading.Timer(1.0, self._watch_config)
+        self._config_watcher.daemon = True
+        self._config_watcher.start()
+
+    def _reload_config(self):
+        """Re-read config and re-register hotkey listener."""
+        try:
+            new_config = load_config()
+        except Exception as e:
+            log.warning("Failed to reload config: %s", e)
+            return
+
+        old_listen = self.config.get("hotkeys", {}).get("listen", "")
+        new_listen = new_config.get("hotkeys", {}).get("listen", "")
+
+        self.config = new_config
+
+        if old_listen != new_listen:
+            log.info("Hotkey changed: '%s' -> '%s', re-registering", old_listen, new_listen)
+            if self.listener:
+                self.listener.stop()
+            timing = self.config.get("timing", {})
+            self.listener = hotkey.HotkeyListener(
+                listen_hotkey=new_listen,
+                long_press_ms=timing.get("long_press_ms", 300),
+                on_short_press=self._on_short_press,
+                on_long_press=self._on_long_press,
+            )
+            self.listener.start()
+
+        # Always update chroma key position on config change
+        if self.chroma_session:
+            chroma_cfg = self.config.get("chroma", {})
+            listen = new_listen or old_listen
+            new_key = hotkey.HotkeyListener._parse_trigger_key(listen)
+            self.chroma_session.mute_key_pos = chroma.resolve_key_position(
+                new_key,
+                chroma_cfg.get("mute_button_row"),
+                chroma_cfg.get("mute_button_col"),
+            )
+            log.info("Chroma key position updated: %s", self.chroma_session.mute_key_pos)
 
     # --- Lifecycle ---
 
@@ -213,14 +292,21 @@ class MasterMuteApp:
         # Chroma SDK
         chroma_cfg = self.config.get("chroma", {})
         if chroma_cfg.get("enabled", False):
+            # Extract the main (non-modifier) key from the listen hotkey
+            listen_key = hotkey.HotkeyListener._parse_trigger_key(
+                self.config["hotkeys"]["listen"]
+            )
             self.chroma_session = chroma.ChromaSession(
-                mute_color_hex=chroma_cfg.get("mute_color", "#AD0014"),
-                deafen_color_hex=chroma_cfg.get("deafen_color", "#AD0014"),
+                unmute_color_hex=chroma_cfg.get("unmute_color", "#FFFFFF"),
+                mute_color_hex=chroma_cfg.get("mute_color", "#FF0000"),
+                deafen_color_hex=chroma_cfg.get("deafen_color", "#FF0000"),
+                mute_key_name=listen_key,
+                mute_button_row=chroma_cfg.get("mute_button_row"),
+                mute_button_col=chroma_cfg.get("mute_button_col"),
                 pulse_interval_ms=chroma_cfg.get("pulse_interval_ms", 500),
             )
             if self.chroma_session.connect():
-                log.info("Chroma SDK connected")
-                self._update_led()
+                log.info("Chroma SDK connected (Synapse still in control)")
             else:
                 log.warning("Chroma SDK not available — LED control disabled")
                 self.chroma_session = None
@@ -234,6 +320,10 @@ class MasterMuteApp:
             on_long_press=self._on_long_press,
         )
         self.listener.start()
+
+        # Config file watcher for hot-reload
+        self._config_mtime = os.path.getmtime(CONFIG_PATH)
+        self._watch_config()
 
         # System tray
         icon_map = {
@@ -258,6 +348,10 @@ class MasterMuteApp:
         if self._shutting_down:
             return
         self._shutting_down = True
+
+        if self._config_watcher:
+            self._config_watcher.cancel()
+            self._config_watcher = None
 
         if self.listener:
             self.listener.stop()
@@ -298,7 +392,7 @@ def main():
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         handlers=[
             logging.FileHandler(
-                os.path.join(os.path.dirname(os.path.abspath(__file__)), log_file)
+                os.path.join(APP_DIR, log_file)
             ),
             logging.StreamHandler(),
         ],

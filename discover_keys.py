@@ -1,4 +1,4 @@
-"""Diagnostic utility to find a key's position in the Chroma SDK 8x24 grid.
+"""Diagnostic utility to find a key's position in the Chroma SDK 6x22 grid.
 
 Run this script, then watch your keyboard. Each cell in the grid will light up
 white one at a time. When you see the mute button light up, note the [row, col]
@@ -12,10 +12,10 @@ import requests
 import sys
 
 CHROMA_BASE = "http://localhost:54235/razer/chromasdk"
-GRID_ROWS = 8
-GRID_COLS = 24
+GRID_ROWS = 6
+GRID_COLS = 22
 WHITE = 0xFFFFFF  # BGR white
-PAUSE = 0.4  # seconds per cell
+PAUSE = 0.3  # seconds per cell
 
 
 def main():
@@ -43,6 +43,7 @@ def main():
         sys.exit(1)
 
     print(f"Connected! Session: {session_uri}")
+    time.sleep(0.5)
     print(f"Scanning {GRID_ROWS}x{GRID_COLS} grid ({GRID_ROWS * GRID_COLS} cells)...")
     print("Watch your keyboard — when the mute button lights up, note the [row, col].\n")
 
@@ -53,30 +54,18 @@ def main():
                 grid = [[0] * GRID_COLS for _ in range(GRID_ROWS)]
                 grid[row][col] = WHITE
 
-                effect_payload = {
-                    "effect": "CHROMA_CUSTOM2",
-                    "param": grid,
-                }
-
                 try:
-                    requests.put(f"{session_uri}/keyboard", json=effect_payload, timeout=2)
+                    requests.put(
+                        f"{session_uri}/keyboard",
+                        json={"effect": "CHROMA_CUSTOM", "param": grid},
+                        timeout=2,
+                    )
                 except Exception:
                     pass
 
                 sys.stdout.write(f"\r  Scanning [row={row}, col={col}]  ")
                 sys.stdout.flush()
                 time.sleep(PAUSE)
-
-                # Clear
-                clear_grid = [[0] * GRID_COLS for _ in range(GRID_ROWS)]
-                try:
-                    requests.put(
-                        f"{session_uri}/keyboard",
-                        json={"effect": "CHROMA_CUSTOM2", "param": clear_grid},
-                        timeout=2,
-                    )
-                except Exception:
-                    pass
 
                 # Heartbeat to keep session alive
                 if (row * GRID_COLS + col) % 20 == 0:
