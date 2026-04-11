@@ -17,13 +17,14 @@ STEP 1: SET YOUR KEYBINDS
 ---------------------------
 Double-click KeybindSetup.exe in this folder.
 
-A window opens where you set three keybinds:
+A window opens where you set four keybinds:
 
     Mute Button     - The key you'll press to mute/deafen
     Discord Mute    - A unique key combo for Discord's mute toggle
     Discord Deafen  - A unique key combo for Discord's deafen toggle
+    Stream Button   - A key to toggle streaming indicator (optional)
 
-Click each field and press the keys you want. Hit "Save & Restart" when done.
+Click each field and press the keys you want. Hit "Save" when done.
 
 The Discord keybinds should be combos you'd never press by accident
 (the defaults CTRL+SHIFT+ALT+F8 and CTRL+SHIFT+ALT+F9 work well).
@@ -63,9 +64,19 @@ AUTO-START WITH WINDOWS
 MasterMute will now start automatically when you log in.
 
 
+STREAMING INDICATOR (optional)
+-------------------------------
+If you set a Stream Button keybind, pressing it toggles a streaming
+indicator in the system tray icon. A small dot appears inside the
+tray circle when streaming is active. This is purely visual — it
+doesn't affect audio or Discord, just helps you see at a glance
+whether you're live.
+
+
 TRAY MENU (right-click the tray icon)
 --------------------------------------
 - Status          - Shows current state (Unmuted / Muted / Deafened)
+                    and streaming indicator if active
 - Pause           - Disables the mute button temporarily
 - Change Keybinds - Opens the keybind setup window
 - Open Config     - Opens config.toml for advanced settings
@@ -84,10 +95,10 @@ under [chroma].
 
 The deafen highlight automatically follows whatever key you set as your
 mute button. If your key is model-specific and the highlight lands on
-the wrong spot, you can manually override it in config.toml by adding:
+the wrong spot, you can manually override it in KeybindSetup using
+the "Find Key" button, or manually in config.toml:
     mute_button_row = <number>
     mute_button_col = <number>
-Ask Xhoni for help finding the correct values for your keyboard.
 
 
 TROUBLESHOOTING

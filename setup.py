@@ -26,8 +26,11 @@ def load_config() -> dict:
 
 
 def save_hotkeys(listen: str, discord_mute: str, discord_deafen: str,
+                 stream_listen: str = "",
                  mute_button_row: int | None = None,
-                 mute_button_col: int | None = None):
+                 mute_button_col: int | None = None,
+                 stream_button_row: int | None = None,
+                 stream_button_col: int | None = None):
     """Rewrite config.toml preserving all sections but updating hotkeys."""
     cfg = load_config()
 
@@ -36,6 +39,7 @@ def save_hotkeys(listen: str, discord_mute: str, discord_deafen: str,
     lines.append(f'listen = "{listen.lower() if listen else ""}"')
     lines.append(f'discord_mute = "{discord_mute.lower() if discord_mute else ""}"')
     lines.append(f'discord_deafen = "{discord_deafen.lower() if discord_deafen else ""}"')
+    lines.append(f'stream_listen = "{stream_listen.lower() if stream_listen else ""}"')
     lines.append("")
 
     timing = cfg.get("timing", {})
@@ -47,13 +51,16 @@ def save_hotkeys(listen: str, discord_mute: str, discord_deafen: str,
     chroma = cfg.get("chroma", {})
     lines.append("[chroma]")
     lines.append(f'enabled = {"true" if chroma.get("enabled", True) else "false"}')
-    lines.append(f'unmute_color = "{chroma.get("unmute_color", "#FFFFFF")}"')
+    lines.append(f'unmute_color = "{chroma.get("unmute_color", "#00FF00")}"')
     lines.append(f'mute_color = "{chroma.get("mute_color", "#FF0000")}"')
     lines.append(f'deafen_color = "{chroma.get("deafen_color", "#FF0000")}"')
+    lines.append(f'stream_color = "{chroma.get("stream_color", "#00FF00")}"')
     if mute_button_row is not None and mute_button_col is not None:
         lines.append(f'mute_button_row = {mute_button_row}')
         lines.append(f'mute_button_col = {mute_button_col}')
-    lines.append(f'pulse_interval_ms = {chroma.get("pulse_interval_ms", 500)}')
+    if stream_button_row is not None and stream_button_col is not None:
+        lines.append(f'stream_button_row = {stream_button_row}')
+        lines.append(f'stream_button_col = {stream_button_col}')
     lines.append("")
 
     log_cfg = cfg.get("logging", {})
@@ -285,7 +292,6 @@ class KeybindEntry:
         self.clear_btn.pack(side="left", padx=(4, 0))
 
     def _clear(self):
-        """Clear the keybind."""
         if self._capturing:
             return
         self.value = ""
@@ -368,7 +374,6 @@ class KeybindSetupWindow:
         self.root.configure(bg="#ffffff")
         self.root.resizable(False, False)
 
-        # Window icon (title bar)
         if os.path.exists(ICON_PATH):
             self.root.iconbitmap(ICON_PATH)
 
@@ -391,20 +396,24 @@ class KeybindSetupWindow:
         self.discord_deafen_entry = KeybindEntry(
             self.root, "Discord Deafen:", hotkeys.get("discord_deafen", "ctrl+shift+alt+f9"), row=4,
         )
+        self.stream_listen_entry = KeybindEntry(
+            self.root, "Stream Button:", hotkeys.get("stream_listen", "ctrl+shift+alt+f6"), row=5,
+        )
 
         # Show cleared state for empty config values
-        for entry in (self.listen_entry, self.discord_mute_entry, self.discord_deafen_entry):
+        for entry in (self.listen_entry, self.discord_mute_entry,
+                      self.discord_deafen_entry, self.stream_listen_entry):
             if not entry.value:
                 entry._is_cleared = True
                 entry.btn.config(text=KeybindEntry.CLEAR_TEXT, fg="#000000")
 
         # LED override fields (optional)
-        led_label = tk.Label(self.root, text="LED Position Override (optional)",
+        led_label = tk.Label(self.root, text="Mute LED Position Override (optional)",
                              font=("Segoe UI", 9), bg="#ffffff", fg="#666666")
-        led_label.grid(row=5, column=0, columnspan=2, pady=(12, 2))
+        led_label.grid(row=6, column=0, columnspan=2, pady=(12, 2))
 
         led_frame = tk.Frame(self.root, bg="#ffffff")
-        led_frame.grid(row=6, column=0, columnspan=2, pady=(0, 4))
+        led_frame.grid(row=7, column=0, columnspan=2, pady=(0, 4))
 
         tk.Label(led_frame, text="Row:", font=("Segoe UI", 10),
                  bg="#ffffff", fg="#000000").pack(side="left", padx=(20, 4))
@@ -418,7 +427,6 @@ class KeybindSetupWindow:
                                   justify="center", relief="flat", bg="#e8e8e8")
         self.col_entry.pack(side="left", padx=(0, 20))
 
-        # Pre-populate from config if set
         if "mute_button_row" in chroma:
             self.row_entry.insert(0, str(chroma["mute_button_row"]))
         if "mute_button_col" in chroma:
@@ -430,7 +438,40 @@ class KeybindSetupWindow:
             relief="flat", cursor="hand2", padx=12, pady=2,
             command=self._open_key_finder,
         )
-        find_btn.grid(row=7, column=0, columnspan=2, pady=(4, 0))
+        find_btn.grid(row=8, column=0, columnspan=2, pady=(4, 0))
+
+        # Stream LED override
+        stream_led_label = tk.Label(self.root, text="Stream LED Position Override (optional)",
+                                    font=("Segoe UI", 9), bg="#ffffff", fg="#666666")
+        stream_led_label.grid(row=9, column=0, columnspan=2, pady=(12, 2))
+
+        stream_led_frame = tk.Frame(self.root, bg="#ffffff")
+        stream_led_frame.grid(row=10, column=0, columnspan=2, pady=(0, 4))
+
+        tk.Label(stream_led_frame, text="Row:", font=("Segoe UI", 10),
+                 bg="#ffffff", fg="#000000").pack(side="left", padx=(20, 4))
+        self.stream_row_entry = tk.Entry(stream_led_frame, width=5, font=("Segoe UI", 10),
+                                         justify="center", relief="flat", bg="#e8e8e8")
+        self.stream_row_entry.pack(side="left", padx=(0, 16))
+
+        tk.Label(stream_led_frame, text="Col:", font=("Segoe UI", 10),
+                 bg="#ffffff", fg="#000000").pack(side="left", padx=(0, 4))
+        self.stream_col_entry = tk.Entry(stream_led_frame, width=5, font=("Segoe UI", 10),
+                                         justify="center", relief="flat", bg="#e8e8e8")
+        self.stream_col_entry.pack(side="left", padx=(0, 20))
+
+        if "stream_button_row" in chroma:
+            self.stream_row_entry.insert(0, str(chroma["stream_button_row"]))
+        if "stream_button_col" in chroma:
+            self.stream_col_entry.insert(0, str(chroma["stream_button_col"]))
+
+        stream_find_btn = tk.Button(
+            self.root, text="Find Key", font=("Segoe UI Semibold", 10),
+            bg="#e8e8e8", fg="#000000", activebackground="#d0d0d0",
+            relief="flat", cursor="hand2", padx=12, pady=2,
+            command=self._open_stream_key_finder,
+        )
+        stream_find_btn.grid(row=11, column=0, columnspan=2, pady=(4, 0))
 
         save_btn = tk.Button(
             self.root, text="Save", font=("Segoe UI Semibold", 12),
@@ -438,7 +479,7 @@ class KeybindSetupWindow:
             relief="flat", cursor="hand2", padx=20, pady=6,
             command=self._save,
         )
-        save_btn.grid(row=8, column=0, columnspan=2, pady=(16, 20))
+        save_btn.grid(row=12, column=0, columnspan=2, pady=(16, 20))
 
         # Center window on screen
         self.root.update_idletasks()
@@ -449,7 +490,6 @@ class KeybindSetupWindow:
         self.root.geometry(f"+{x}+{y}")
 
     def _open_key_finder(self):
-        """Open the Key Finder popup to select LED position."""
         def _on_found(row, col):
             self.row_entry.delete(0, tk.END)
             self.row_entry.insert(0, str(row))
@@ -458,13 +498,20 @@ class KeybindSetupWindow:
 
         KeyFinderPopup(self.root, on_confirm=_on_found)
 
+    def _open_stream_key_finder(self):
+        def _on_found(row, col):
+            self.stream_row_entry.delete(0, tk.END)
+            self.stream_row_entry.insert(0, str(row))
+            self.stream_col_entry.delete(0, tk.END)
+            self.stream_col_entry.insert(0, str(col))
+
+        KeyFinderPopup(self.root, on_confirm=_on_found)
+
     def _on_listen_changed(self):
-        """Clear LED override when the mute button keybind changes."""
         self.row_entry.delete(0, tk.END)
         self.col_entry.delete(0, tk.END)
 
     def _save(self):
-        # Parse row/col if both are filled in and valid
         row_val = self.row_entry.get().strip()
         col_val = self.col_entry.get().strip()
         mute_row = None
@@ -476,12 +523,26 @@ class KeybindSetupWindow:
             except ValueError:
                 pass
 
+        stream_row_val = self.stream_row_entry.get().strip()
+        stream_col_val = self.stream_col_entry.get().strip()
+        stream_row = None
+        stream_col = None
+        if stream_row_val and stream_col_val:
+            try:
+                stream_row = int(stream_row_val)
+                stream_col = int(stream_col_val)
+            except ValueError:
+                pass
+
         save_hotkeys(
             self.listen_entry.value,
             self.discord_mute_entry.value,
             self.discord_deafen_entry.value,
+            stream_listen=self.stream_listen_entry.value,
             mute_button_row=mute_row,
             mute_button_col=mute_col,
+            stream_button_row=stream_row,
+            stream_button_col=stream_col,
         )
         if self.on_save:
             self.on_save()
