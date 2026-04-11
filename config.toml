@@ -2,6 +2,7 @@
 listen = "ctrl+shift+alt+f7"
 discord_mute = "ctrl+shift+alt+f8"
 discord_deafen = "ctrl+shift+alt+f9"
+stream_listen = "ctrl+shift+alt+f6"
 
 [timing]
 long_press_ms = 300
@@ -9,12 +10,14 @@ deafen_audio_delay_ms = 500
 
 [chroma]
 enabled = true
-unmute_color = "#FFFFFF"
+unmute_color = "#00FF00"
 mute_color = "#FF0000"
 deafen_color = "#FF0000"
+stream_color = "#00FF00"
 mute_button_row = 0
-mute_button_col = 20
-pulse_interval_ms = 500
+mute_button_col = 21
+stream_button_row = 0
+stream_button_col = 18
 
 [logging]
 level = "INFO"

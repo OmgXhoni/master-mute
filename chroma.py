@@ -1,4 +1,4 @@
-"""Razer Chroma SDK REST API wrapper — per-key CHROMA_CUSTOM for mute/deafen states."""
+"""Razer Chroma SDK REST API wrapper — CHROMA_CUSTOM for mute/deafen states."""
 
 import logging
 import threading
@@ -16,37 +16,36 @@ EFFECT_REFRESH_INTERVAL = 0.2  # seconds between re-sends to hold effect
 
 
 # Standard Razer Chroma 6x22 grid key positions.
-# Maps keyboard library key names to (row, col) tuples.
 KEY_GRID_MAP = {
     # Row 0: Esc, F1-F12, PrtSc, ScrLk, Pause, media keys
     "esc": (0, 1), "f1": (0, 3), "f2": (0, 4), "f3": (0, 5), "f4": (0, 6),
     "f5": (0, 7), "f6": (0, 8), "f7": (0, 9), "f8": (0, 10), "f9": (0, 11),
     "f10": (0, 12), "f11": (0, 13), "f12": (0, 14),
     "print screen": (0, 15), "scroll lock": (0, 16), "pause": (0, 17),
-    # Row 1: `/~, 1-0, -/_, =/+, Backspace, Ins, Home, PgUp, NumLock, Num/, Num*, Num-
+    # Row 1
     "`": (1, 1), "1": (1, 2), "2": (1, 3), "3": (1, 4), "4": (1, 5),
     "5": (1, 6), "6": (1, 7), "7": (1, 8), "8": (1, 9), "9": (1, 10),
     "0": (1, 11), "-": (1, 12), "=": (1, 13), "backspace": (1, 14),
     "insert": (1, 15), "home": (1, 16), "page up": (1, 17),
     "num lock": (1, 18), "num /": (1, 19), "num *": (1, 20), "num -": (1, 21),
-    # Row 2: Tab, Q-P, [, ], \, Del, End, PgDn, Num7-9, Num+
+    # Row 2
     "tab": (2, 1), "q": (2, 2), "w": (2, 3), "e": (2, 4), "r": (2, 5),
     "t": (2, 6), "y": (2, 7), "u": (2, 8), "i": (2, 9), "o": (2, 10),
     "p": (2, 11), "[": (2, 12), "]": (2, 13), "\\": (2, 14),
     "delete": (2, 15), "end": (2, 16), "page down": (2, 17),
     "num 7": (2, 18), "num 8": (2, 19), "num 9": (2, 20), "num +": (2, 21),
-    # Row 3: CapsLock, A-L, ;, ', Enter, Num4-6
+    # Row 3
     "caps lock": (3, 1), "a": (3, 2), "s": (3, 3), "d": (3, 4), "f": (3, 5),
     "g": (3, 6), "h": (3, 7), "j": (3, 8), "k": (3, 9), "l": (3, 10),
     ";": (3, 11), "'": (3, 12), "enter": (3, 14),
     "num 4": (3, 18), "num 5": (3, 19), "num 6": (3, 20),
-    # Row 4: LShift, Z-M, commas, period, /, RShift, Up, Num1-3, NumEnter
+    # Row 4
     "left shift": (4, 1), "shift": (4, 1),
     "z": (4, 2), "x": (4, 3), "c": (4, 4), "v": (4, 5), "b": (4, 6),
     "n": (4, 7), "m": (4, 8), ",": (4, 9), ".": (4, 10), "/": (4, 11),
     "right shift": (4, 14), "up": (4, 16),
     "num 1": (4, 18), "num 2": (4, 19), "num 3": (4, 20), "num enter": (4, 21),
-    # Row 5: LCtrl, Win, LAlt, Space, RAlt, Fn, Menu, RCtrl, Left, Down, Right, Num0, Num.
+    # Row 5
     "left ctrl": (5, 1), "ctrl": (5, 1), "left windows": (5, 2),
     "left alt": (5, 3), "alt": (5, 3), "space": (5, 7),
     "right alt": (5, 11), "right windows": (5, 12),
@@ -59,10 +58,6 @@ KEY_GRID_MAP = {
 def resolve_key_position(key_name: str | None,
                          override_row: int | None,
                          override_col: int | None) -> tuple[int, int] | None:
-    """Resolve the grid position for a key.
-
-    Priority: manual override > auto-lookup > None (full blackout).
-    """
     if override_row is not None and override_col is not None:
         return (override_row, override_col)
     if key_name:
@@ -73,7 +68,6 @@ def resolve_key_position(key_name: str | None,
 
 
 def hex_to_bgr(hex_color: str) -> int:
-    """Convert '#RRGGBB' hex color to BGR integer for Chroma SDK."""
     hex_color = hex_color.lstrip("#")
     r = int(hex_color[0:2], 16)
     g = int(hex_color[2:4], 16)
@@ -105,7 +99,6 @@ class ChromaSession:
         self._effect_stop = threading.Event()
 
     def connect(self) -> bool:
-        """Initialize a Chroma SDK session."""
         payload = {
             "title": "MasterMute",
             "description": "Mic mute LED controller",
@@ -168,17 +161,13 @@ class ChromaSession:
         """All keys red."""
         return [[self.mute_color_bgr] * GRID_COLS for _ in range(GRID_ROWS)]
 
-    def _build_deafen_grid_on(self) -> list:
+    def _build_deafen_grid(self) -> list:
         """All keys black, mute button red (if position known)."""
         grid = [[0] * GRID_COLS for _ in range(GRID_ROWS)]
         if self.mute_key_pos:
             row, col = self.mute_key_pos
             grid[row][col] = self.deafen_color_bgr
         return grid
-
-    def _build_deafen_grid_off(self) -> list:
-        """All keys black, mute button also black."""
-        return [[0] * GRID_COLS for _ in range(GRID_ROWS)]
 
     def _ensure_connected(self) -> bool:
         if not self.connected:
@@ -215,7 +204,7 @@ class ChromaSession:
         self._stop_effect()
         if not self._ensure_connected():
             return
-        grid = self._build_deafen_grid_on()
+        grid = self._build_deafen_grid()
         self._effect_stop.clear()
         self._effect_thread = threading.Thread(
             target=self._effect_loop, args=(grid,), daemon=True
@@ -255,7 +244,8 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.DEBUG)
 
     session = ChromaSession(
-        mute_color_hex="#AD0014", deafen_color_hex="#AD0014",
+        mute_color_hex="#FF0000", deafen_color_hex="#FF0000",
+        unmute_color_hex="#00FF00",
         mute_key_name="f7",
     )
 

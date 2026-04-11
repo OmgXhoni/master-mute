@@ -1,5 +1,6 @@
 """MasterMute — intercepts Ctrl+Shift+Alt+F8 (rebound mute button) and turns
-it into a smart mic mute / deafen toggle with whole-keyboard LED feedback."""
+it into a smart mic mute / deafen toggle with whole-keyboard LED feedback
+and streaming indicator in the system tray."""
 
 import atexit
 import enum
@@ -48,19 +49,20 @@ def load_config() -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Tray icon — loaded from mastermute.png source
+# Tray icon generation
 # ---------------------------------------------------------------------------
 
-def _make_circle_icon(color: str, size: int = 64) -> Image.Image:
-    """Draw a solid colored circle for the tray icon."""
+def _make_status_icon(color: str, recording_dot: bool = False,
+                      dot_color: str = "#FF0000", size: int = 64) -> Image.Image:
+    """Draw a solid colored circle, optionally with a small recording dot in the center."""
     img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
     draw.ellipse([4, 4, size - 4, size - 4], fill=color)
+    if recording_dot:
+        cx, cy = size // 2, size // 2
+        r = size // 8
+        draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=dot_color)
     return img
-
-ICON_UNMUTED = _make_circle_icon("#22CC22")   # Green
-ICON_MUTED = _make_circle_icon("#FF0000")     # Red
-ICON_DEAFENED = _make_circle_icon("#FF8800")   # Orange
 
 
 # ---------------------------------------------------------------------------
@@ -71,11 +73,13 @@ class MasterMuteApp:
     def __init__(self, config: dict):
         self.config = config
         self.state = State.UNMUTED
+        self.streaming: bool = False
         self._lock = threading.Lock()
         self._com_initialized_threads: set = set()
         self.tray_icon: pystray.Icon = None
         self.chroma_session: chroma.ChromaSession = None
         self.listener: hotkey.HotkeyListener = None
+        self.stream_listener: hotkey.HotkeyListener = None
         self._shutting_down = False
         self._config_mtime = 0.0
         self._config_watcher: threading.Timer = None
@@ -124,9 +128,8 @@ class MasterMuteApp:
                 return
 
             if self.state == State.MUTED:
-                # Already muted — just need to deafen Discord and mute speakers
-                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_mute"])   # unmute Discord first
-                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_deafen"]) # then deafen
+                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_mute"])
+                hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_deafen"])
                 delay = self.config.get("timing", {}).get("deafen_audio_delay_ms", 500) / 1000.0
                 import time
                 time.sleep(delay)
@@ -137,7 +140,6 @@ class MasterMuteApp:
                 log.info("State -> DEAFENED (from muted)")
                 return
 
-            # From UNMUTED
             audio.set_mic_mute(True)
             hotkey.send_discord_hotkey(self.config["hotkeys"]["discord_deafen"])
             delay = self.config.get("timing", {}).get("deafen_audio_delay_ms", 500) / 1000.0
@@ -148,6 +150,12 @@ class MasterMuteApp:
             self._update_led()
             self._update_tray()
             log.info("State -> DEAFENED")
+
+    def _on_stream_press(self):
+        with self._lock:
+            self.streaming = not self.streaming
+            self._update_tray()
+            log.info("Streaming -> %s", self.streaming)
 
     # --- LED ---
 
@@ -163,21 +171,31 @@ class MasterMuteApp:
 
     # --- Tray ---
 
+    def _get_tray_icon(self) -> Image.Image:
+        if self.state == State.UNMUTED:
+            return _make_status_icon("#22CC22", self.streaming, dot_color="#FF0000")
+        elif self.state == State.MUTED:
+            return _make_status_icon("#FF0000", self.streaming, dot_color="#FFFFFF")
+        else:
+            return _make_status_icon("#FF8800", self.streaming, dot_color="#FFFFFF")
+
+    def _get_tray_title(self) -> str:
+        title = f"MasterMute: {self.state.value.title()}"
+        if self.streaming:
+            title += " | Streaming"
+        return title
+
     def _update_tray(self):
         if self.tray_icon is None:
             return
-        if self.state == State.UNMUTED:
-            self.tray_icon.icon = ICON_UNMUTED
-            self.tray_icon.title = "MasterMute: Unmuted"
-        elif self.state == State.MUTED:
-            self.tray_icon.icon = ICON_MUTED
-            self.tray_icon.title = "MasterMute: Muted"
-        elif self.state == State.DEAFENED:
-            self.tray_icon.icon = ICON_DEAFENED
-            self.tray_icon.title = "MasterMute: Deafened"
+        self.tray_icon.icon = self._get_tray_icon()
+        self.tray_icon.title = self._get_tray_title()
 
     def _get_status_text(self, item=None):
-        return f"Status: {self.state.value.title()}"
+        text = f"Status: {self.state.value.title()}"
+        if self.streaming:
+            text += " | Streaming"
+        return text
 
     def _get_pause_text(self, item=None):
         if self.listener and self.listener.paused:
@@ -197,7 +215,6 @@ class MasterMuteApp:
         os.startfile(CONFIG_PATH)
 
     def _open_keybind_setup(self):
-        """Launch the keybind setup UI."""
         import subprocess
         if getattr(sys, 'frozen', False):
             setup_exe = os.path.join(APP_DIR, "KeybindSetup.exe")
@@ -224,7 +241,6 @@ class MasterMuteApp:
     # --- Config hot-reload ---
 
     def _watch_config(self):
-        """Poll config.toml for changes and reload hotkeys if modified."""
         if self._shutting_down:
             return
         try:
@@ -239,7 +255,6 @@ class MasterMuteApp:
         self._config_watcher.start()
 
     def _reload_config(self):
-        """Re-read config and re-register hotkey listener."""
         try:
             new_config = load_config()
         except Exception as e:
@@ -248,6 +263,8 @@ class MasterMuteApp:
 
         old_listen = self.config.get("hotkeys", {}).get("listen", "")
         new_listen = new_config.get("hotkeys", {}).get("listen", "")
+        old_stream = self.config.get("hotkeys", {}).get("stream_listen", "")
+        new_stream = new_config.get("hotkeys", {}).get("stream_listen", "")
 
         self.config = new_config
 
@@ -264,7 +281,19 @@ class MasterMuteApp:
             )
             self.listener.start()
 
-        # Always update chroma key position on config change
+        if old_stream != new_stream:
+            log.info("Stream hotkey changed: '%s' -> '%s', re-registering", old_stream, new_stream)
+            if self.stream_listener:
+                self.stream_listener.stop()
+            if new_stream:
+                self.stream_listener = hotkey.HotkeyListener(
+                    listen_hotkey=new_stream,
+                    long_press_ms=99999,
+                    on_short_press=self._on_stream_press,
+                    on_long_press=lambda: None,
+                )
+                self.stream_listener.start()
+
         if self.chroma_session:
             chroma_cfg = self.config.get("chroma", {})
             listen = new_listen or old_listen
@@ -282,22 +311,20 @@ class MasterMuteApp:
         comtypes.CoInitialize()
         self._com_initialized_threads.add(threading.current_thread().ident)
 
-        # Sync initial state: force everything to unmuted on startup
-        # This ensures Discord, OS mic, and the script are all in sync
         audio.set_mic_mute(False)
         audio.set_speaker_mute(False)
         self.state = State.UNMUTED
+        self.streaming = False
         log.info("Startup: forced unmuted state for sync")
 
         # Chroma SDK
         chroma_cfg = self.config.get("chroma", {})
         if chroma_cfg.get("enabled", False):
-            # Extract the main (non-modifier) key from the listen hotkey
             listen_key = hotkey.HotkeyListener._parse_trigger_key(
                 self.config["hotkeys"]["listen"]
             )
             self.chroma_session = chroma.ChromaSession(
-                unmute_color_hex=chroma_cfg.get("unmute_color", "#FFFFFF"),
+                unmute_color_hex=chroma_cfg.get("unmute_color", "#00FF00"),
                 mute_color_hex=chroma_cfg.get("mute_color", "#FF0000"),
                 deafen_color_hex=chroma_cfg.get("deafen_color", "#FF0000"),
                 mute_key_name=listen_key,
@@ -311,7 +338,7 @@ class MasterMuteApp:
                 log.warning("Chroma SDK not available — LED control disabled")
                 self.chroma_session = None
 
-        # Hotkey listener
+        # Mute hotkey listener
         timing = self.config.get("timing", {})
         self.listener = hotkey.HotkeyListener(
             listen_hotkey=self.config["hotkeys"]["listen"],
@@ -321,20 +348,26 @@ class MasterMuteApp:
         )
         self.listener.start()
 
-        # Config file watcher for hot-reload
+        # Stream hotkey listener (tray icon tracking only — LED not supported)
+        stream_hotkey = self.config.get("hotkeys", {}).get("stream_listen", "")
+        if stream_hotkey:
+            self.stream_listener = hotkey.HotkeyListener(
+                listen_hotkey=stream_hotkey,
+                long_press_ms=99999,
+                on_short_press=self._on_stream_press,
+                on_long_press=lambda: None,
+            )
+            self.stream_listener.start()
+
+        # Config file watcher
         self._config_mtime = os.path.getmtime(CONFIG_PATH)
         self._watch_config()
 
         # System tray
-        icon_map = {
-            State.UNMUTED: ICON_UNMUTED,
-            State.MUTED: ICON_MUTED,
-            State.DEAFENED: ICON_DEAFENED,
-        }
         self.tray_icon = pystray.Icon(
             "MasterMute",
-            icon=icon_map[self.state],
-            title=f"MasterMute: {self.state.value.title()}",
+            icon=self._get_tray_icon(),
+            title=self._get_tray_title(),
             menu=self._build_menu(),
         )
 
@@ -356,6 +389,10 @@ class MasterMuteApp:
         if self.listener:
             self.listener.stop()
             self.listener = None
+
+        if self.stream_listener:
+            self.stream_listener.stop()
+            self.stream_listener = None
 
         if self.chroma_session:
             self.chroma_session.release()
